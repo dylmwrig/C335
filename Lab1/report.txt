@@ -1,0 +1,4 @@
+Dylan Wright
+dylmwrig
+
+I made a basic hello world program on an infinite loop. For the second part of the assignment I altered that program to create hix.c files, where x is an increasing number, and associated .out files. Every time the base program says "Hello World", another program is created which says HI. System is a surprisingly easy function to use. I thought that's where I would run into problems, but it was pretty self explanatory. Instead, simple string manipulation as far as creating new names for the files was the hardest part (this is always the hardest part for me when it comes to C). I tried maybe 3 or 4 different techinques before I found one to fall back on. I've always wanted to write a program that creates and executes other programs even on a basic level, so I learned how to do that with this program. I also learned a few bash commands from the tutorial, for example I didn't know all of the things you can accomplish using cat. 
