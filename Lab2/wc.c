@@ -9,12 +9,23 @@
 int main()
 {
   int c; //check end of file
+  int words = 0, chars = 0, lines = 0;
 
-  while ((c == getchar()) != EOF)
+  while ((c = getchar()) != EOF)
   {
-    if (c == 32) //ASCII for space
+    if (c == ' ' || c == '\t' || c == '\r' || c == '\f' || c == '\v') //ASCII for space
     {
-      printf("You pressed space\n");
+      words++;
     } //end if
+
+    else if (c == '\n')
+    {
+      words++;
+      lines++;
+    } //end else if
+
+    chars++;
   } //end while
+
+  printf("%d %d %d", lines, words, chars);
 } //end main
