@@ -9,3 +9,6 @@ poly.o: poly.c dump.c
 
 dump.o: dump.c
 	$(CC) $(CFLAGS) -c dump.c
+
+clean:
+	rm *.o poly

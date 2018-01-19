@@ -1,0 +1,12 @@
+lab 2
+author: Dylan Wright
+my id: dylmwrig
+
+partner: EJ Seong
+partner id: eunseong
+
+The results of this assignment are a simple word count program complete with a make file, a version of the memory dump program complete with a makefile and which prints the address in different formats. I became more familiar with printf and got practice with make and gdb.
+
+As far as difficulties, I could have avoided a few of them if I just read the prompt. Once I got together with my partner and we started the group work in this project, we just kind of went and didnt' look at the prompt past the demonstration portion. This was a mistake. The stuff about contiguous memory and about which characters were to be considered unprintable would have been a lot easier to figure out if we just read those sections about it in the prompt. Otherwise, formatting the different prints while using casts was frustrating at times, but once we got one done the rest came pretty easily. "double float" threw us for a loop as well, we overthought that part. We didn't realize you just meant double but it made more sense when I realized how many bytes until it was printed each time.
+
+For this lab, I relearned the use of make files even if it was to a pretty limited degree. I didn't know about the "taking files as input using <" thing before so I learned that as well. I learned a bit about memory dumping and memory manipulation in general as well, and had to use gdb again which is always educational. I didn't know about the memory options in gdb before this.
