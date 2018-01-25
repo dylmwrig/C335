@@ -1,0 +1,5 @@
+target extended-remote :4242
+file lab4.elf
+load 
+break main
+cont

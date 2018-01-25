@@ -1,0 +1,3 @@
+[submodule "fall2017-lab"]
+	path = fall2017-lab
+	url = git@github.iu.edu:SOIC-Computer-Structures/fall2017-lab.git
