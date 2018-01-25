@@ -34,7 +34,6 @@ int pop(Node ** n)
   Node * curr = *n;
   if (curr == NULL)
   {
-    printf("Not enough operands!\n"); //if pop was called too much, that means the user used an operator with less than 2 operands on the stack
     return;
   } //end if
 
@@ -50,41 +49,53 @@ int pop(Node ** n)
 } //end pop
 
 //call when q or c is entered as a command
-void clearStack(Node * n)
+void clearStack(Node ** n)
 {
-  while (n != NULL)
+  Node * curr = *n;
+  while (curr != NULL)
   {
-    
-  } //end if
+    pop(n);
+    curr = *n;
+    //printf("\ncurr val: %d", curr->data);
+  } //end while
 } //end clearStack
 
 //apply operator to the first two elements in the list
 //return the value for the node which will be pushed after the operation is complete
 int applyOp(Node ** n, char op)
 {
-  int rhs = pop(n);
-  int lhs = pop(n);
-
-  if (op == '+')
+  Node * curr = *n;
+  if (curr == NULL || curr->next == NULL)
   {
-    return (lhs + rhs);
+    printf("Not enough operands!\n");
   } //end if
 
-  else if (op == '-')
-  {
-    return (lhs - rhs);
-  } //end else if
-
-  else if (op == '*')
-  {
-    return (lhs * rhs);
-  } //end else if
-
-  //no real need for error checking here
-  //because the input is pretty controlled
   else
   {
-    return (lhs / rhs);
+    int rhs = pop(n);
+    int lhs = pop(n);
+
+    if (op == '+')
+    {
+      return (lhs + rhs);
+    } //end if
+
+    else if (op == '-')
+    {
+      return (lhs - rhs);
+    } //end else if
+
+    else if (op == '*')
+    {
+      return (lhs * rhs);
+    } //end else if
+
+    //no real need for error checking here
+    //because the input is pretty controlled
+    else
+    {
+      return (lhs / rhs);
+    } //end else
   } //end else
 } //end applyOp
 
@@ -144,7 +155,8 @@ int main()
       //clear stack
       else if (c == 'c')
       {
-        
+        Node ** p = &n;
+        clearStack(p);
       } //end else if
 
       //print everything "top to bottom"
