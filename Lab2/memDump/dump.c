@@ -6,9 +6,8 @@ void dump_memory(void *p, int len)
   for (i = 0; i < len; i++) {
     printf("%8p: ", p + i);
     
-    //if ((isascii(*(unsigned char *) (p + i)) == 0) && *(char *)(p + i) < 126)
     char c = *(unsigned char *)(p + i);
-    int ci = (int)c;
+    int ci = (int)c; //cast c to int to see if the character is printable 
     if ((ci >= 127) || (ci < 32))
     {
       printf("?");
@@ -16,10 +15,18 @@ void dump_memory(void *p, int len)
    
     else
     {
-      printf("%c", c);//*(unsigned char *)(p + i));
+      printf("%c", c);
     } 
     printf("\t0x%0x", *(unsigned char *)(p + i));
     
+    /*
+     * for everything else, only print when the amount of bytes is correct
+     * ie every 4, print the integer
+     * without this, garbage would be printed
+     * EJ and I collaborated on every part of this section
+     * as far as logic, casting, printf semantics, etc.
+     * the only real difference in our code otherwise only comes down to code style
+     */
     //short
     if (i%2 == 0)
     {
