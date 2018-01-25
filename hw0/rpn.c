@@ -52,11 +52,10 @@ int pop(Node ** n)
 void clearStack(Node ** n)
 {
   Node * curr = *n;
-  while (curr != NULL)
+  while (curr != NULL) //pop till you drop
   {
     pop(n);
     curr = *n;
-    //printf("\ncurr val: %d", curr->data);
   } //end while
 } //end clearStack
 
@@ -90,12 +89,10 @@ int applyOp(Node ** n, char op)
       return (lhs * rhs);
     } //end else if
 
-    //no real need for error checking here
-    //because the input is pretty controlled
-    else
+    else if (rhs != 0)
     {
       return (lhs / rhs);
-    } //end else
+    } //end else if
   } //end else
 } //end applyOp
 
@@ -195,6 +192,8 @@ int main()
       } //end else
     } //end else
   } //end while
+
+  //delete stack when program ends
   Node ** p = &n;
   clearStack(p);
 
