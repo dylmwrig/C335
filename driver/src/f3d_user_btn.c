@@ -9,6 +9,10 @@
 
 /*Initialization of the UserButton*/
 void f3d_user_btn_init(void){
+
+  CC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
+  GPIO_Init(GPIOA, &GPIO_InitStructure);
+
 }
 
 /*reads the User Button*/
