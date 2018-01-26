@@ -13,8 +13,11 @@ void delay(void) {
 int main(void) {
 
   f3d_led_init();
-  f3d_led_all_on();
-  f3d_led_all_off();
+  f3d_led_on(8);
+  f3d_led_on(9);
+  f3d_led_off(9);
+  //f3d_led_all_on();
+  //f3d_led_all_off();
 
   while(1);
 }
