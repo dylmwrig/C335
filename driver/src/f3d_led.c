@@ -26,78 +26,82 @@ void f3d_led_init(void) {
   GPIO_Init(GPIOE, &GPIO_InitStructure);
 
 }
-/*Turns on the appropriate led as specified by the parameter.*/
+
+/*Turns on the appropriate led as specified by the parameter.
+ *prompt specifies that led should be 0-7
+ *with the northmost LED being 0, increasing clockwise from there*/
 void f3d_led_on(int led) {
   switch (led){
     
-    case 8:
-     GPIOE->BSRR = GPIO_Pin_8;
-     break;
- 
-    case 9:
+    case 0:
      GPIOE->BSRR = GPIO_Pin_9;
      break;
-
-    case 10:
+ 
+    case 1:
      GPIOE->BSRR = GPIO_Pin_10;
      break;
 
-    case 11:
+    case 2:
      GPIOE->BSRR = GPIO_Pin_11;
      break;
 
-    case 12:
+    case 3:
      GPIOE->BSRR = GPIO_Pin_12;
      break;
 
-    case 13:
+    case 4:
      GPIOE->BSRR = GPIO_Pin_13;
      break;
 
-    case 14:
+    case 5:
      GPIOE->BSRR = GPIO_Pin_14;
      break;
 
-    case 15:
+    case 6:
      GPIOE->BSRR = GPIO_Pin_15;
+     break;
+
+    case 7:
+     GPIOE->BSRR = GPIO_Pin_8;
      break;
   }
 }
 
-/*Turns off the approiate led as specified by the parameter*/ 
+/*Turns off the approiate led as specified by the parameter
+ *same function as f3d_led_on but change BSRR to BRR as that is what specifies "off"*/ 
 void f3d_led_off(int led) {
   switch (led){
     
-    case 8:
-     GPIOE->BRR = GPIO_Pin_8;
-     break;
- 
-    case 9:
+    case 0:
      GPIOE->BRR = GPIO_Pin_9;
      break;
-
-    case 10:
+ 
+    case 1:
      GPIOE->BRR = GPIO_Pin_10;
      break;
 
-    case 11:
+    case 2:
      GPIOE->BRR = GPIO_Pin_11;
      break;
 
-    case 12:
+    case 3:
      GPIOE->BRR = GPIO_Pin_12;
      break;
 
-    case 13:
+    case 4:
      GPIOE->BRR = GPIO_Pin_13;
      break;
 
-    case 14:
+    case 5:
      GPIOE->BRR = GPIO_Pin_14;
      break;
 
-    case 15:
+    case 6:
      GPIOE->BRR = GPIO_Pin_15;
+     break;
+
+    case 7:
+     GPIOE->BRR = GPIO_Pin_8;
      break;
   }
 } 
@@ -127,7 +131,6 @@ void f3d_led_all_off(void) {
   GPIOE->BRR = GPIO_Pin_13;
   GPIOE->BRR = GPIO_Pin_14;
   GPIOE->BRR = GPIO_Pin_15; 
-
  
 } 
 
