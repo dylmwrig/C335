@@ -7,6 +7,15 @@
 #include <stm32f30x_rcc.h>
 #include <f3d_led.h>
 
+/*
+ * Author: Dylan Wright
+ * Partner: EJ Seong
+ *
+ * f3d_led_init calls each of the necessary LED initialization functions
+ * f3d_led_on takes an integer and turns on the corresponding LED
+ * f3d_led_off does the same but turns off an LED
+ * f3d_led_all_on and all_off turn on and off every LED respectively
+ */
 
 //intializes the port and pins for the leds on the board
 void f3d_led_init(void) {

@@ -3,7 +3,18 @@
 #include <f3d_user_btn.h>
 #include <stdbool.h>
 
+/*
+ * Lab 3
+ * Author: Dylan Wright
+ * Partner: EJ Seong
+ *
+ * main initializes components on the board
+ * then runs an infinite loop where the LEDs are individually lit in a clockwise pattern
+ * unless the user button is pressed, in which case the loop does nothing
+ */
+
 // Simple looping delay function
+// prewritten as part of the assignment prompt
 void delay(void) {
   int i = 2000000;
   while (i-- > 0) {

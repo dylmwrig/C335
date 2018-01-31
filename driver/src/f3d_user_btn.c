@@ -6,6 +6,16 @@
 #include <stm32f30x_gpio.h>
 #include <stm32f30x_rcc.h>
 
+/*
+ * Author: Dylan Wright
+ * Partner: EJ Seong
+ *
+ * functions to activate and use the "user button" on the board
+ * f3d_user_btn_init basically does the same thing as the corresponding function in f3d_led.c
+ * user_btn_read is basically a getter and returns a 0 if the button isn't being pressed, 1 if it is
+ *
+ * use this to check whether the user wants to pause the LED sequence or not
+ */
 
 /*Initialization of the UserButton*/
 void f3d_user_btn_init(void){
@@ -26,4 +36,5 @@ void f3d_user_btn_init(void){
 int user_btn_read(void){
  
   return (GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_0));
+
 }
