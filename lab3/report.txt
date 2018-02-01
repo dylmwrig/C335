@@ -1,0 +1,13 @@
+Author: Dylan Wright
+Partner: EJ Seong
+Lab 3
+
+1) According to the c335 lab manual linked on the assignment page, this board has 128 KB flash and 8 KB RAM. As for the speed, it runs at 24 Mhz.
+
+2) GPIO stands for General Purpose Input/Output.
+
+4) LD6 and LD7, GPIOE
+
+5) GPIO_Pin, GPIO_Mode, GPIO_Speed, GPIO_OType, and GPIO_PuPd
+
+My main difficulties had to do with getting the LEDs to light in the first place. I didn't realize that you couldn't initialize more than one LED at a time without using that LED_All macro thing, which I think led to nothing lighting up at all for a while. It's pretty frustrating debugging something that's giving no output, because it's impossible to tell what is actually causing the issue. After I got that it was smooth sailing.

@@ -12,6 +12,8 @@
  * Partner: EJ Seong
  *
  * f3d_led_init calls each of the necessary LED initialization functions
+ * when initializing pins, you must use GPIO_Pin_All, otherwise there will be 
+ * an error that's pretty hard to diagnose
  * f3d_led_on takes an integer and turns on the corresponding LED
  * f3d_led_off does the same but turns off an LED
  * f3d_led_all_on and all_off turn on and off every LED respectively
