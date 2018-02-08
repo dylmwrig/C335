@@ -45,12 +45,28 @@ int main(void) {
   setvbuf(stdout, NULL, _IONBF, 0);
   setvbuf(stderr, NULL, _IONBF, 0);
   
-  while (1){ 
-    //putstring("hello"); 
-    //putchar(getchar());
-    printf("Hello World!");
- }
-}
+  //the following is copied from wc.c in lab 2
+  int c; //check end of file
+  int words = 0, chars = 0, lines = 0;
+
+  while ((c = getchar()) != 0x1b)
+  {
+    if (c == ' ' || c == '\t' || c == '\r' || c == '\f' || c == '\v') //ASCII for space
+    {
+      words++;
+    } //end if
+
+    else if (c == '\n')
+    {
+      words++;
+      lines++;
+    } //end else if
+
+    chars++;
+  } //end while
+
+  printf("%d %d %d", lines, words, chars);
+} //end main
 
 #ifdef USE_FULL_ASSERT
 void assert_failed(uint8_t* file, uint32_t line) {

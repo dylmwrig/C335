@@ -1,0 +1,11 @@
+Lab 4
+Author: Dylan Wright
+Partner: EJ Seong, Daniel
+
+1) 2 connections are required for UART
+2) It allows you to configure the GPIO pins for different functions and configure different peripherals.
+3) The baud rate is the agreed frequency which the clocks need to run at in order to communicate.
+4) Newlib does not depend on an operating system, whereas printf and other C libraries will. 
+5) This is the main way of debugging code written in an embedded environment, because it gives you some output when none is given by the board itself.
+
+I learned about Saleae (which, when we were working on this, gave me issues), I learned about making wired connections for UART. I had an issue for a while where I only initialized one clock, so it took a long time to debug this problem.

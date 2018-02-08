@@ -7,6 +7,9 @@
  * Author: Dylan Wright
  * Partners: Daniel, EJ 
  *
+ * Initialize UART, and then include functions for writing and receiving characters
+ * putstring simply calls putchar repeatedly
+ * ALWAYS initialize every clock, this bug was an absolute headache
  */
 
 #include <stm32f30x.h>
