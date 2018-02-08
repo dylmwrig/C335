@@ -23,6 +23,15 @@
  * 
  * 
  */
+
+/*
+ * Lab 4
+ * Author: Dylan Wright
+ * Partners: EJ Seong, Daniel
+ *
+ * I commented out the original getchar, printchar, and printf stuff
+ * right now my main just executes the wordcount program using UART
+ */
 /* Code: */
 
 #include <f3d_uart.h>
@@ -44,28 +53,35 @@ int main(void) {
   setvbuf(stdin, NULL, _IONBF, 0);
   setvbuf(stdout, NULL, _IONBF, 0);
   setvbuf(stderr, NULL, _IONBF, 0);
+
+  while(1){
+    //was told to just comment out the original stuff from this assignment
+    //putchar('a');
+    //putchar(getchar());
+    //printf("Hello world");
+ 
+    //the following is copied from wc.c in lab 2
+    int c; //check end of file
+    int words = 0, chars = 0, lines = 0;
   
-  //the following is copied from wc.c in lab 2
-  int c; //check end of file
-  int words = 0, chars = 0, lines = 0;
-
-  while ((c = getchar()) != 0x1b)
-  {
-    if (c == ' ' || c == '\t' || c == '\r' || c == '\f' || c == '\v') //ASCII for space
+    while ((c = getchar()) != 0x1b)
     {
-      words++;
-    } //end if
-
-    else if (c == '\n')
-    {
-      words++;
-      lines++;
-    } //end else if
-
-    chars++;
+      if (c == ' ' || c == '\t' || c == '\r' || c == '\f' || c == '\v') //ASCII for space
+      {
+        words++;
+      } //end if
+  
+      else if (c == '\n')
+      {
+        words++;
+        lines++;
+      } //end else if
+  
+      chars++;
+    } //end while
+  
+    printf("%d %d %d", lines, words, chars);
   } //end while
-
-  printf("%d %d %d", lines, words, chars);
 } //end main
 
 #ifdef USE_FULL_ASSERT
