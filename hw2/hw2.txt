@@ -1,0 +1,12 @@
+Author: Dylan Wright
+Homework 2
+
+4.1 Prove that the largest number that can be represented with radix-r with N digits is r^N - 1
+
+For this proof, dn will be a series of all 9s.
+Base case: N = 1, d[i] * 10^0 = 9. The upper bound for the radix digit will be (1 - 1) or 10^0 so the digit will never reach 10.
+For N = k, the upper bound on the Riemann sum is k - 1 so the largest digit which can be represented is di * 10^(k - 1). Additionally, for N = k + 1, the upper bound for the largest digit will become k so the largest digit will be di * 10^k). If every digit is 9, then the largest digit that can be represented will always be one less than r^k.
+
+4.2) If you have a carry number, that number will represent whatever is in the tens place of the resulting addition of the previous two numbers. In radix addition, you are always adding two single digit numbers at a time ie the largest both numbers can be will be 9. Therefore, the resulting number will always be between 0 and 18 and you will always have carry numbers which are 0 or 1. 
+
+4.3) 
