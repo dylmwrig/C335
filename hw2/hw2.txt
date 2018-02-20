@@ -12,4 +12,50 @@ For N = k, the upper bound on the Riemann sum is k - 1 so the largest digit whic
 4.5) If the number is positive and the left most bit is 0, it is obvious why bit extension is value preserving: 0 will be added to the number. On the other hand, if the number is negative and the left most bit is 1: in binary, the digit at i + 1 is double the digit at i. Therefore, if you add a negative i + 1 with a positive i, the value will be identical to the original value of the negative i. 
 Example: 1000 = -1 * 2^3. Sign extension returns 11000 = -1 * 2^4 + 1 * 2^3. Converting the negative bit to positive and adding it to the next negative bit will return the same number. Because it holds that negative i is identical to (negative i + 1 - positive i), the number as a whole will be unaltered.
 
-6) 
+6) Method is to continuously divide by two and return the (reversed) remainder.
+213:
+q 213 106 53 26 13 6 3 1
+r   1  0   1  0  1 0 1 1 binary representation is 1101 0101
+
+1627:
+q 1627 813 406 203 101 50 25 12 6 3 1
+r    1   1   0   1   1  0  1  0 0 1 1 binary is 0110 0101 1011
+
+31773:
+q 31773 15886 7943 3971 1985 992 496 248 124 62 31 15 7 3 1
+r     1     0    1    1    1   0   0   0   0  0  1  1 1 1 1 binary: 0111 1100 0001 1101
+
+103:
+q 103 51 25 12 6 3 1
+r   1  1  1  0 0 1 1 binary: 0110 0111
+
+7)
+222 - 47:
+222 bin: 1101 1110
+47  bin: 0010 1111 converted: 1101 0001 
+equation: 1101 1110
+        + 1101 0001
+          1010 1111
+
+1011 - 143:
+1011 bin: 0011 1111 0011
+143  bin: 0000 1000 1111 converted: 1111 0111 0001
+equation: 0011 1111 0011
+        + 1111 0111 0001
+          0011 0110 0100
+
+171 - 88:
+171 bin:  1010 1011
+ 88 bin:  0101 1000 converted: 1010 1000
+equation: 1010 1011
+        + 1010 1000
+          0101 0011
+
+2720 - 127:
+2720 bin: 1010 1010 0000
+ 127 bin: 0000 0111 1111 converted: 1111 1000 0001
+equation: 1010 1010 0000
+        + 1111 1000 0001
+          1010 0010 0001
+
+8)
