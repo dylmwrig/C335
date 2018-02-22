@@ -33,7 +33,7 @@ void f3d_gyro_interface_init() {
   //ANOTHER NOTE
   //originally I copied these initializations from another file so wherever there was a GPIOx, it was GPIOB
   //but, there's one line in the prompt which uses "GPIOE" so I'm going to use that for now
-  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOE, ENABLE);
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
   GPIO_InitTypeDef GPIO_InitStructure;
   GPIO_StructInit(&GPIO_InitStructure);
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
@@ -42,10 +42,21 @@ void f3d_gyro_interface_init() {
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
 
-  GPIO_PinAFConfig(GPIOE, 5, GPIO_AF_5);
-  GPIO_PinAFConfig(GPIOE, 6, GPIO_AF_5);
-  GPIO_PinAFConfig(GPIOE, 7, GPIO_AF_5);
-  GPIO_PinAFConfig(GPIOE, 7, GPIO_AF_5);
+  GPIO_PinAFConfig(GPIOA, 5, GPIO_AF_5);
+  GPIO_PinAFConfig(GPIOA, 6, GPIO_AF_5);
+  GPIO_PinAFConfig(GPIOA, 7, GPIO_AF_5);
+
+  GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+  //I can't find the corresponding alternate function so I'll drop the PinAFConfig for now
+  //"Once pin PE3 is configured, set it high" ?????????
+  GPIO_InitTypeDef GPIO_InitStructure;
+  GPIO_StructInit(&GPIO_InitStructure);
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
 
   GPIO_Init(GPIOE, &GPIO_InitStructure);
 
@@ -91,8 +102,6 @@ void f3d_gyro_interface_init() {
   GPIO_PinAFConfig(GPIOB, 15, GPIO_AF_5);
 
   GPIO_Init(GPIOB, &GPIO_InitStructure);
-
-
  *
  */
   
