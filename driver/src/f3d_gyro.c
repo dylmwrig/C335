@@ -1,19 +1,100 @@
 #include <f3d_gyro.h>
 #include <stm32f30x.h>
+
+/*
+ ************************************************************************
+     I HAVEN'T TESTED ANY OF THIS YET
+     I AM SHOOTING OFF THE HIP AND WRITING CODE WITHOUT THE BOARD ATM SO TEST THIS
+ * 
+ * Author: Dylan Wright
+ * Partner: none this time
+ * 
+ */
+
 void f3d_gyro_interface_init() {
   /**********************************************************************/
   /************** CODE HERE *********************************************/
   //You must configure and initialize the following 4 pins
 
   //SCK PA5 
-  
+
+  //QUICK NOTE
+  //MOSI and MISO have different pins associated with them in a diagram on the assignment
+  //in the diagram, MISO is PA6 and MOSI is PA7
+  //
   //MOSI PA6 
   
   //MISO PA7
 
   //CS PE3
 
+  //sck: af5
 
+  //ANOTHER NOTE
+  //originally I copied these initializations from another file so wherever there was a GPIOx, it was GPIOB
+  //but, there's one line in the prompt which uses "GPIOE" so I'm going to use that for now
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOE, ENABLE);
+  GPIO_InitTypeDef GPIO_InitStructure;
+  GPIO_StructInit(&GPIO_InitStructure);
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+
+  GPIO_PinAFConfig(GPIOE, 5, GPIO_AF_5);
+  GPIO_PinAFConfig(GPIOE, 6, GPIO_AF_5);
+  GPIO_PinAFConfig(GPIOE, 7, GPIO_AF_5);
+  GPIO_PinAFConfig(GPIOE, 7, GPIO_AF_5);
+
+  GPIO_Init(GPIOE, &GPIO_InitStructure);
+
+/*
+  GPIO_StructInit(&GPIO_InitStructure);
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF; 
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+ 
+  GPIO_PinAFConfig(GPIOB, 14, GPIO_AF_5);
+  GPIO_PinAFConfig(GPIOB, 15, GPIO_AF_5);
+
+  GPIO_Init(GPIOB, &GPIO_InitStructure);
+*/
+
+
+/*
+ * EXAMPLE PIN INITIALIZATION FROM THE LCD DRIVER
+ *
+ *  //pins 9 through 12
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
+  GPIO_InitTypeDef GPIO_InitStructure;
+  GPIO_StructInit(&GPIO_InitStructure);
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+
+  GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+  GPIO_StructInit(&GPIO_InitStructure);
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF; 
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+ 
+  GPIO_PinAFConfig(GPIOB, 13, GPIO_AF_5);
+  GPIO_PinAFConfig(GPIOB, 14, GPIO_AF_5);
+  GPIO_PinAFConfig(GPIOB, 15, GPIO_AF_5);
+
+  GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+
+ *
+ */
   
   //set the CS high
   
