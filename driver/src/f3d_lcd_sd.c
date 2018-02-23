@@ -24,6 +24,12 @@
  * 
  */
 
+/*
+ * Author: Dylan Wright
+ * Partner: EJ Seong
+ * lcd initialization and functions
+ */
+
 /* Copyright (c) 2004-2007 The Trustees of Indiana University and 
  * Indiana University Research and Technology Corporation.  
  * 
@@ -262,7 +268,8 @@ void f3d_lcd_pushColor(uint16_t *color,int cnt) {
 static void f3d_lcd_writeCmd(uint8_t c) {
   LcdWrite(LCD_C,&c,1);
 }
-
+/*
+ * slower version of fillscreen
 void f3d_lcd_fillScreen(uint16_t color) {
   uint8_t x,y;
   f3d_lcd_setAddrWindow (0,0,ST7735_width-1,ST7735_height-1,MADCTLGRAPHICS);
@@ -270,6 +277,18 @@ void f3d_lcd_fillScreen(uint16_t color) {
     for (y=0;y<ST7735_height; y++) {
       f3d_lcd_pushColor(&color,1);
     }
+  }
+}
+*/
+
+//faster version
+void f3d_lcd_fillScreen(uint16_t color) {
+  uint8_t y;
+  uint16_t x[ST7735_width];
+  for (y = 0; y < ST7735_width; y++) x[y] = color;
+  f3d_lcd_setAddrWindow (0,0,ST7735_width-1,ST7735_height-1,MADCTLGRAPHICS);
+  for (y=0;y<ST7735_height; y++) {
+    f3d_lcd_pushColor(x,ST7735_width);
   }
 }
 

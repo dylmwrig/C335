@@ -1,0 +1,13 @@
+Author: Dylan Wright
+Partner: EJ Seong
+Lab6
+
+1) Debugging using printf has the advantage of the fact that it is simple, intuitive, and fast. As we learned on this assignment though, it's expensive.
+
+2) One reason is that this interface allows you to change the transmission speed if, for example, you have two slaves with different speeds. Additionally, this function is generic enough that you can use it for devices which support bidirectional communication and for those which only support one way.
+
+3) LCD_CS_DEASSERT indicates that the receiver is not ready to receive information. This is important as it prevents character overrun.
+
+4) glcdfont.c contains an unsigned int array with values corresponding to different ASCII characters. That value is then examined byte by byte then, for every byte which is 1, a pixel corresponding to the appropriate x and y location to the pixels of the character are written.
+
+Difficulties: Designing the x and y blocks on the LCD was pretty difficult. The wiring also took a surprising amount of time, and I know that some faulty wiring messed up my partner for a while.
