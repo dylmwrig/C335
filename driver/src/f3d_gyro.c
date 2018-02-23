@@ -49,64 +49,20 @@ void f3d_gyro_interface_init() {
   GPIO_Init(GPIOA, &GPIO_InitStructure);
 
   //I can't find the corresponding alternate function so I'll drop the PinAFConfig for now
-  //"Once pin PE3 is configured, set it high" ?????????
-  GPIO_InitTypeDef GPIO_InitStructure;
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOE, ENABLE);
   GPIO_StructInit(&GPIO_InitStructure);
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-
-  GPIO_Init(GPIOE, &GPIO_InitStructure);
-
-/*
-  GPIO_StructInit(&GPIO_InitStructure);
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF; 
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
- 
-  GPIO_PinAFConfig(GPIOB, 14, GPIO_AF_5);
-  GPIO_PinAFConfig(GPIOB, 15, GPIO_AF_5);
-
-  GPIO_Init(GPIOB, &GPIO_InitStructure);
-*/
-
-
-/*
- * EXAMPLE PIN INITIALIZATION FROM THE LCD DRIVER
- *
- *  //pins 9 through 12
-  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
-  GPIO_InitTypeDef GPIO_InitStructure;
-  GPIO_StructInit(&GPIO_InitStructure);
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
 
-  GPIO_Init(GPIOB, &GPIO_InitStructure);
-
-  GPIO_StructInit(&GPIO_InitStructure);
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF; 
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+  GPIO_Init(GPIOE, &GPIO_InitStructure);
+  GPIO_SetBits(GPIOE,GPIO_Pin_3); 
  
-  GPIO_PinAFConfig(GPIOB, 13, GPIO_AF_5);
-  GPIO_PinAFConfig(GPIOB, 14, GPIO_AF_5);
-  GPIO_PinAFConfig(GPIOB, 15, GPIO_AF_5);
-
-  GPIO_Init(GPIOB, &GPIO_InitStructure);
- *
- */
-  
   //set the CS high
-  
+  //GYRO_CS_HIGH(); 
+ 
   /**********************************************************************/
    
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
@@ -186,13 +142,25 @@ void f3d_gyro_write(uint8_t* pBuffer, uint8_t WriteAddr, uint16_t NumByteToWrite
   /************** CODE HERE *********************************************/
 
   //CHECK TO SEE HOW MANY BYTES AND HANDLE THAT CORRECTLY
+  if (NumByteToWrite > 1) {
+    WriteAddr |= (uint8_t)(0x02); // sets to multibyte mode
+  }
 
   //SET THE CS
+  GYRO_CS_LOW();
 
   //SEND THE FIRST BYTE
+  f3d_gyro_sendbyte(WriteAddr);  
 
   //IF MULTIPLE, SEND THE ADDITIONAL
+  while(NumByteToWrite > 0x00) {
+    //copied this from the read function, definitely seems wrong in this context
+    f3d_gyro_sendbyte(((uint8_t)*pBuffer));
+    NumByteToWrite--;
+    pBuffer++;
+  }
 
+  GYRO_CS_HIGH();
   /***************************************************************************/
 }
 
@@ -201,11 +169,17 @@ static uint8_t f3d_gyro_sendbyte(uint8_t byte) {
   /*********************************************************/
   /***********************CODE HERE ************************/
 
-
+  while (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_TXE) == RESET);
+  SPI_SendData8(SPI1, byte);
 
   /********************** CODE HERE ************************/
   /*********************************************************/
-}
+
+  //I assume this is what I'm supposed to do with this code???
+  //it's kind of dropped in the sendbyte section of the lab prompt
+  while (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_RXNE) == RESET);
+  return (uint8_t)SPI_ReceiveData8(SPI1);}
+
 /*gets the data*/
 void f3d_gyro_getdata(float *pfData) {
   //

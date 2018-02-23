@@ -1,0 +1,6 @@
+Author: Dylan Wright
+Partners: None
+
+1) The CS pin is used for enabling the correct device for communication
+2) Setting the CS to high lets the chip select know that we are done transmitting information. It is also set to high at the end of the write and read functions
+3) We would need different CS lines to have different peripherals
