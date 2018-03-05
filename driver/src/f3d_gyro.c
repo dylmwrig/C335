@@ -166,14 +166,8 @@ void f3d_gyro_write(uint8_t* pBuffer, uint8_t WriteAddr, uint16_t NumByteToWrite
 
 /*sends the bytes*/
 static uint8_t f3d_gyro_sendbyte(uint8_t byte) {
-  /*********************************************************/
-  /***********************CODE HERE ************************/
-
   while (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_TXE) == RESET);
   SPI_SendData8(SPI1, byte);
-
-  /********************** CODE HERE ************************/
-  /*********************************************************/
 
   //I assume this is what I'm supposed to do with this code???
   //it's kind of dropped in the sendbyte section of the lab prompt
@@ -182,8 +176,6 @@ static uint8_t f3d_gyro_sendbyte(uint8_t byte) {
 
 /*gets the data*/
 void f3d_gyro_getdata(float *pfData) {
-  //
-  //
   int16_t RawData[3];
   uint8_t tmpbuffer[6];
   int i;

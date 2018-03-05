@@ -4,3 +4,6 @@ Partners: None
 1) The CS pin is used for enabling the correct device for communication
 2) Setting the CS to high lets the chip select know that we are done transmitting information. It is also set to high at the end of the write and read functions
 3) We would need different CS lines to have different peripherals
+5) You would want to be able to change frequencies on the fly because it is possible to connect more than one slave to an SPI network.
+
+What difficulties I had had a lot to do with making stupid mistakes. For example, for some reason, I forgot for a while to configure the wiring needed for uart. Additionally, it took a while to configure the gyro itself.
