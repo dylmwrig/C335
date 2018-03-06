@@ -1,5 +1,6 @@
 Author: Dylan Wright
 Partner: EJ Seong
+EJ and I only really worked until checkpoint one, so we only really did the initialization stuff and a few of the report questions together.
 
 Q1) 12 pins:
     1 Vdd_IO
