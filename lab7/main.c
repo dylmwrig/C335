@@ -11,6 +11,7 @@
  * Author: Dylan Wright
  * Partner: EJ Seong
  * EJ and I only really worked on the initialization driver stuff together as that's all we could get done in the first lab session. Afterwards, we completed the lab solo.
+ * Unfortunately, I was unable to finish the compass section of this lab because I spent so much time on the visualization part.
  */
 
 #include <stm32f30x.h> // Pull in include files for F30x standard drivers
@@ -72,26 +73,19 @@ void swapVals(float pitch[80], float roll[80]){
 void updateGraphs(float oldPitch[80], float oldRoll[80], float newPitch, float newRoll){
   int i, pitchY, rollY;
 
+  //unfortunately, this is the most efficient way I could come up with to clear the screen
+  //it looks horrible but is fast so its ok I guess.
   for (i = 0; i < 79; i++){
     pitchY = (int)(oldPitch[i] * 10.0);
     if (oldPitch[i] < 0.0){
       pitchY *= -1;
       pitchY += 40;
-    }
+    } //end if
  
     else{
       pitchY = 40 - pitchY;
-    }
-
-/*
-    if (oldPitch[i] >= 0.0){
-      pitchY = 40 - pitchY;
-    } //end if
-
-    else{
-      pitchY += 40;
     } //end else
-*/
+
     f3d_lcd_drawPixel(i+20, pitchY, WHITE);
   } //end for
 
@@ -105,8 +99,6 @@ void updateGraphs(float oldPitch[80], float oldRoll[80], float newPitch, float n
       rollY *= -1;
       rollY += 120;
     } //end else
-
-    //printf("Roll Y: %f\n", rollY);
 
     f3d_lcd_drawPixel(i+20, rollY, WHITE);
   } //end for
@@ -122,25 +114,15 @@ void updateGraphs(float oldPitch[80], float oldRoll[80], float newPitch, float n
     if (oldPitch[i] < 0.0){
       pitchY *= -1;
       pitchY += 40;
-    }
+    } //end if
  
     else{
       pitchY = 40 - pitchY;
-    }
-/*
-    if (oldPitch[i] >= 0.0){
-      pitchY = 40 - pitchY;
-    } //end if
-
-    else{
-      pitchY += 40;
     } //end else
-*/
+
     f3d_lcd_drawPixel(i+20, pitchY, BLACK);
   } //end for
 
-  //to scale the values to the graph, the upper and lower bounds will be 2.0 and -2.0
-  //there are 40 pixels vertically on each graph so each 0.1 corresponds to one pixel
   for (i = 0; i < 79; i++){
     rollY = (int)(oldRoll[i] * 10.0);
     if (oldRoll[i] >= 0.0){
@@ -154,8 +136,6 @@ void updateGraphs(float oldPitch[80], float oldRoll[80], float newPitch, float n
 
     f3d_lcd_drawPixel(i+20, rollY, BLACK);
   } //end for
-
-
 } //end updateGraphs
 
 int main(void) {
@@ -187,10 +167,8 @@ int main(void) {
  
     float pitch = atan2(accelVal[0], pow(accelVal[1], 2) + pow(accelVal[2], 2));
     float roll = atan2(accelVal[1], pow(accelVal[0], 2) + pow(accelVal[2], 2));
-    float heading = atan2(magVal[1], magVal[0]);
+    float heading = atan2(magVal[1], magVal[0]); 
 
-    //printf("Pitch and roll: %f %f\n", pitch, roll); 
-    //printf("Heading: %f\n", heading); 
     updateGraphs(pitchVals, rollVals, pitch, roll);
  } //end while
 } //end main

@@ -23,4 +23,8 @@ The accelerometer is located towards the upper right of the board, it's a little
 
 Q2) As with the gyro, you have to write before you can read with the accelerometer and magnetometer. The lines of code referenced initialize values on the peripherals. For example, the first two arguments to write are the addresses of the device and register respectively. Value is the register which the data will be written to. 
 
-Q3) 
+Q3) These lines read in X, Y, and Z data from the buffer and convert/store the values in the "output" array. 
+
+Q4) Tilt compensation is necessary because you cannot necessarily assume that the compass is on a flat, even surface. Because you cannot guarantee this, if you don't handle tilt compensation you might possibly have incorrect calibration. 
+
+Difficulties: Couldn't figure out the compass stuff. I might have if I didn't spend so much time on the visualization. I think the visualization could have been faster if I came up with something simpler (my original idea was simpler than what I ended up doing). Also, my visualization is pretty hacky. I learned about how directions are calculated, I also learned what an accelerometer and magenetometer are.
