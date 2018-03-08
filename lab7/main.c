@@ -74,6 +74,16 @@ void updateGraphs(float oldPitch[80], float oldRoll[80], float newPitch, float n
 
   for (i = 0; i < 79; i++){
     pitchY = (int)(oldPitch[i] * 10.0);
+    if (oldPitch[i] < 0.0){
+      pitchY *= -1;
+      pitchY += 40;
+    }
+ 
+    else{
+      pitchY = 40 - pitchY;
+    }
+
+/*
     if (oldPitch[i] >= 0.0){
       pitchY = 40 - pitchY;
     } //end if
@@ -81,7 +91,7 @@ void updateGraphs(float oldPitch[80], float oldRoll[80], float newPitch, float n
     else{
       pitchY += 40;
     } //end else
-
+*/
     f3d_lcd_drawPixel(i+20, pitchY, WHITE);
   } //end for
 
@@ -92,6 +102,7 @@ void updateGraphs(float oldPitch[80], float oldRoll[80], float newPitch, float n
     } //end if
 
     else{
+      rollY *= -1;
       rollY += 120;
     } //end else
 
@@ -108,6 +119,15 @@ void updateGraphs(float oldPitch[80], float oldRoll[80], float newPitch, float n
   //there are 40 pixels vertically on each graph so each 0.1 corresponds to one pixel
   for (i = 0; i < 79; i++){
     pitchY = (int)(oldPitch[i] * 10.0);
+    if (oldPitch[i] < 0.0){
+      pitchY *= -1;
+      pitchY += 40;
+    }
+ 
+    else{
+      pitchY = 40 - pitchY;
+    }
+/*
     if (oldPitch[i] >= 0.0){
       pitchY = 40 - pitchY;
     } //end if
@@ -115,7 +135,7 @@ void updateGraphs(float oldPitch[80], float oldRoll[80], float newPitch, float n
     else{
       pitchY += 40;
     } //end else
-
+*/
     f3d_lcd_drawPixel(i+20, pitchY, BLACK);
   } //end for
 
@@ -128,6 +148,7 @@ void updateGraphs(float oldPitch[80], float oldRoll[80], float newPitch, float n
     } //end if
 
     else{
+      rollY *= -1;
       rollY += 120;
     } //end else
 
@@ -168,7 +189,7 @@ int main(void) {
     float roll = atan2(accelVal[1], pow(accelVal[0], 2) + pow(accelVal[2], 2));
     float heading = atan2(magVal[1], magVal[0]);
 
-    printf("Pitch and roll: %f %f\n", pitch, roll);
+    //printf("Pitch and roll: %f %f\n", pitch, roll); 
     //printf("Heading: %f\n", heading); 
     updateGraphs(pitchVals, rollVals, pitch, roll);
  } //end while
