@@ -28,7 +28,9 @@
  * rm is the register optionally shifted and used as the second operand
  */
 int main(){
-  //char *regnames[] = {"r0", "r1", ... "pc"};
+  //I got these register names from figure 5.3 of the "instruction interpretation" pdf on the course website
+  //I think this many registers is overkill
+  char *regnames[] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "sp", "lr", "pc"};
   //char *opname[]   = {"ands", "eors", ... };
 
   int t=0x4008;
@@ -38,12 +40,15 @@ int main(){
     //out of the 5 instructions we're supposed to handle, only one of them has 0 0 1 as its 13-15 binary digits
     //and this is also the instruction which uses imm8
     //so you should check this in the beginning
+    
   } //end if
 
-  char *inst = "4008";
+  int inst;
   //used for reading hex codes using scanf
-  while (scanf("%x", &inst) == 1){
-    
+  while (scanf("%x", &inst) == 1){ 
+    printf("%d %d %d\n", Rd(inst), Rm(inst), imm8(inst));
+    int rdIndex = Rd(inst) - 1;
+    printf("%s\n", regnames[rdIndex]);
   } //end while
   return 0;
 } //end main
