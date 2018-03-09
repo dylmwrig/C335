@@ -50,12 +50,10 @@ int main(){
   //used for reading hex codes using scanf
   while (scanf("%x", &inst) == 1){ 
     printf("%d %d %d\n", Rd(inst), Rm(inst), imm8(inst));
-    int rdIndex = Rd(inst), rmIndex = Rm(inst);
-    printf("rdIndex: %d", rdIndex);
-    printf("\nReg name for rd: ");
-    printf("%s", regnames[rdIndex]);
-    printf("\nReg name for rn: ");
-    printf("%s", regnames[rmIndex]);
+    int regOne = Rd(inst), regTwo = Rm(inst);
+
+    printf("op whatever then %s,%s\n", regnames[regOne], regnames[regTwo]);
   } //end while
+
   return 0;
 } //end main
