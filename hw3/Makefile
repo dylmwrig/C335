@@ -5,5 +5,5 @@ CFLAGS= -O1 -g
 disassembler: hw3.c
 	$(CC) $(CFLAGS) -o disassembler hw3.c 
 
-run:
+run: disassembler
 	./disassembler

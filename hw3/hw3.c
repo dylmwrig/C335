@@ -30,7 +30,10 @@
 int main(){
   //I got these register names from figure 5.3 of the "instruction interpretation" pdf on the course website
   //I think this many registers is overkill
-  char *regnames[] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "sp", "lr", "pc"};
+  //
+  //right now I have it so that, because the number returned by the macros should be equal to the number register, I'm just indexing this array based on what is returned
+  //but I don't know how I'm going to get sp, lr, and pc registers or if I even need those
+  char *regnames[11] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", "sp", "lr", "pc"};
   //char *opname[]   = {"ands", "eors", ... };
 
   int t=0x4008;
@@ -47,8 +50,12 @@ int main(){
   //used for reading hex codes using scanf
   while (scanf("%x", &inst) == 1){ 
     printf("%d %d %d\n", Rd(inst), Rm(inst), imm8(inst));
-    int rdIndex = Rd(inst) - 1;
-    printf("%s\n", regnames[rdIndex]);
+    int rdIndex = Rd(inst), rmIndex = Rm(inst);
+    printf("rdIndex: %d", rdIndex);
+    printf("\nReg name for rd: ");
+    printf("%s", regnames[rdIndex]);
+    printf("\nReg name for rn: ");
+    printf("%s", regnames[rmIndex]);
   } //end while
   return 0;
 } //end main
