@@ -23,6 +23,8 @@
 #include <f3d_mag.h>
 #include <stdio.h>
 #include <math.h>
+#include <f3d_led.h>
+#include <stdbool.h>
 
 #define TIMER 20000
 
@@ -138,6 +140,45 @@ void updateGraphs(float oldPitch[80], float oldRoll[80], float newPitch, float n
   } //end for
 } //end updateGraphs
 
+//display north on the compass LEDs on the 
+void showNorth(float heading){
+  f3d_led_all_off();
+
+  if (heading > 2.25){
+    f3d_led_on(0);
+  } //end if
+
+  else if (heading > 1.5){
+    f3d_led_on(1);
+  } //end else if
+
+  else if (heading > .75){
+    f3d_led_on(2);
+  } //end else if
+ 
+  else if (heading > 0.0){
+    f3d_led_on(3);
+  } //end else if
+
+  else if (heading > -.75){
+    f3d_led_on(4);
+  } //end else if
+
+  else if (heading > -1.5){
+    f3d_led_on(5);
+  } //end else if
+
+  else if (heading > -2.25){
+    f3d_led_on(6);
+  } //end else if
+
+  else if (heading > -3.0){
+    f3d_led_on(7);
+  } //end else if
+ 
+  printf("%f\n", heading);
+} //end showNorth
+
 int main(void) {
   // Set up your inits before you go ahead  
   f3d_uart_init();
@@ -145,6 +186,8 @@ int main(void) {
   f3d_i2c1_init();
   delay(10);
   f3d_mag_init();
+  delay(10);
+  f3d_led_init();
   delay(10);
   f3d_lcd_init();
   delay(10);
@@ -159,9 +202,23 @@ int main(void) {
 
   graphInit();
   float pitchVals[80], rollVals[80];
+  bool accelMode = true;
 
   float accelVal[3], magVal[3]; //x, y, and z readings from accelerometer and magnetometer
   while(1){
+    if (user_btn_read()){
+      accelMode = !accelMode;
+      if (accelMode){
+        graphInit();
+      } //end if
+
+      else{
+        f3d_lcd_fillScreen(WHITE);
+        f3d_lcd_drawString(40, 10, "COMPASS MODE", BLACK, WHITE);
+        f3d_lcd_drawString(10, 20, "SERIALT FOR HEADING", BLACK, WHITE);
+      } //end else
+    } //end if
+
     f3d_accel_read(accelVal);
     f3d_mag_read(magVal);
  
@@ -169,7 +226,13 @@ int main(void) {
     float roll = atan2(accelVal[1], pow(accelVal[0], 2) + pow(accelVal[2], 2));
     float heading = atan2(magVal[1], magVal[0]); 
 
-    updateGraphs(pitchVals, rollVals, pitch, roll);
+    if (accelMode){
+      updateGraphs(pitchVals, rollVals, pitch, roll);
+    } //end if
+
+    else{
+      showNorth(heading);
+    }
  } //end while
 } //end main
   

@@ -15,14 +15,14 @@ int i = 2000000;
 }
 
 //change led light based on gyro data
-int ledDisplay(float num){
+int ledDisplay(int num){
  if(num>5 && num <=40){return 0;}
- if(num>0 && num <=5){return 1;}
- if(num>40 && num <=80){return 2;}
- if(num>80 && num <=100){return 3;}
- if(num<0 && num >=-20){return 4;}
- if(num<-20 && num >=-40){return 5;}
- if(num <-40 && num >=-80){return 6;}
+ else if(num>0 && num <=5){return 1;}
+ else if(num>40 && num <=80){return 2;}
+ else if(num>80 && num <=100){return 3;}
+ else if(num<0 && num >=-20){return 4;}
+ else if(num<-20 && num >=-40){return 5;}
+ else if(num <-40 && num >=-80){return 6;}
  else {return 7;}
 
 }
@@ -60,7 +60,7 @@ int main(void){
     f3d_gyro_getdata(val);
   
     gyroVal=val[count%3];
-    ledNum=ledDisplay(gyroVal);
+    ledNum=ledDisplay((int)gyroVal);
     f3d_led_on(ledNum);
  
     delay();
