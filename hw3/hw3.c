@@ -34,23 +34,24 @@ int main(){
   char *opname[]   = {"ands", "eors", "lsls", "lsrs", "asrs"};
 
   FILE *out;
-  out = fopen("thumb_output", "w");
+  out = fopen("test.out", "w");
 
   if (out == NULL){
     printf("Error opening output file");
     return;
   } //end if
 
+  //format type stuff necessary for thumb
   fprintf(out, ".text\n.syntax unified\n.thumb\n");
 
   int inst;
   //used for reading hex codes using scanf
   while (scanf("%x", &inst) == 1){ 
 
+    //extracting these digits from the hex to binary input will give you the "identity" of the hex
     int regOne = Rd(inst), regTwo = Rm(inst), op = Op(inst);
 
-    fprintf(out, "\t%s,%s,%s\n", opname[op], regnames[regOne], regnames[regTwo]);
-
+    fprintf(out, "    %s %s,%s\n", opname[op], regnames[regOne], regnames[regTwo]);
   } //end while
 
   fclose(out);
