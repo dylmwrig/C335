@@ -52,7 +52,11 @@ void f3d_lcd_sd_interface_init(void) {
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOB, ENABLE);
   GPIO_InitTypeDef GPIO_InitStructure;
   GPIO_StructInit(&GPIO_InitStructure);
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12;
+
+  //
+  //for the sd card lab
+  //I didn't alter any of this, but I did add GPIO Pin 8 because that pin is in the same mode
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -73,7 +77,26 @@ void f3d_lcd_sd_interface_init(void) {
 
   GPIO_Init(GPIOB, &GPIO_InitStructure);
 
+//dumpster this maybe
+/*
+  //initialization for sd card
+  GPIO_StructInit(&GPIO_InitStructure);
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT; 
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+ 
+  GPIO_PinAFConfig(GPIOB, 13, GPIO_AF_5);
+  GPIO_PinAFConfig(GPIOB, 14, GPIO_AF_5);
+  GPIO_PinAFConfig(GPIOB, 15, GPIO_AF_5);
+
+  GPIO_Init(GPIOB, &GPIO_InitStructure);
+*/
+
   /* ^^^^^^^^^^^ pin initialization for the LCD goes here ^^^^^^^^^^ */
+
+  
  
   // Section 4.1 SPI2 configuration
   // Note: you will need to add some code in the last three functions
