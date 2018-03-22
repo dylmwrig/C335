@@ -1,0 +1,26 @@
+GDB checkpoint 1:
+r0     	       0x20000000	536870912
+r1     	       0x0	0
+r2     	       0x8000000        134217728
+r3     	       0xe000ed00	3758157056
+r4     	       0x90c	2316
+r5     	       0x0	0
+r6     	       0x0	0
+r7     	       0x0	0
+r8     	       0x0	0
+r9     	       0x0	0
+r10    	       0x0	0
+r11    	       0x0	0
+r12    	       0x0	0
+sp     	       0x20009ff8	0x20009ff8
+lr     	       0x8000273        134218355
+pc     	       0x800044c        0x800044c <main>
+cpsr   	       0x61000000	1627389952
+
+GDB Checkpoint 2:
+Breakpoint 2, encryptStr (
+    phrase=0x800f40c "2F3-Discovery_FW_V1.1.0/Libraries/STM32F30x_StdPeriph_Driver/src/stm32f30x_rcc.c",
+phrase@entry=0x800f3f8 "cow", key=0x800f3fe "G", key@entry=0x800f3fc "PIG", 
+    ncrypt=ncrypt@entry=0x20009fec "3&0P\031\016\027Ih<f&\"$u\177\032\023\035z"<Address	0x2000a000 out of
+ bounds>) at main.c:63
+
