@@ -1,0 +1,11 @@
+Author: Dylan Wright
+Partner: EJ Seong
+
+1) We did not have to initialize pins this time because ?????
+
+2) The main difference is that you have to check if you are sending multiple bytes in the regular read function which implies that nunchuk will only send one byte at a time
+
+
+3) jx and jy correspond to the x and y values of the joystick, ax ay and az correspond to the x y and z values of the accelerometer, and the c and z variables represent the buttons on the nunchuk.
+
+4) The code from f3d_nunchuk_read bitwise ands the data function with 0x03. 0x03 is a hex number which represents 0000 0011. Because you are anding it with this number, you will only be preserving the data of the final two bits. 
