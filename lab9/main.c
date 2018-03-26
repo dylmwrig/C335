@@ -23,6 +23,12 @@
  * 
  * 
  */
+
+/*
+ * Author: Dylan Wright
+ * Partner: EJ Seong (we worked on initializations together)
+ */
+
 /* Code: */
 
 #include <stm32f30x.h>  // Pull in include files for F30x standard drivers 
@@ -38,6 +44,7 @@
 #include <ff.h>
 #include <diskio.h>
 #include <stdio.h>
+#include <string.h> //strlen
 
 //these structs are copied from the document about bmp inclusion
 struct bmpfile_magic {
@@ -71,6 +78,16 @@ struct bmppixel { // little endian byte order
  uint8_t r;
 };
 
+/*
+ * converting color
+ * as noted on page 185 in the manual about bmp images, the color will be 24 bit.
+ * However, to display on the lcd, you will have to convert it to 16 bit. This is lossy conversion.
+ * Basically, you will remove 8 bits as evenly as possible across the 3 bytes so one does not lose more data than the others
+ * You do this by removing 3 bits from the first, 3 from the second, and 2 from the third.
+ * you then pass these bits into the 16 bytes and boom its converted.
+ *
+ */
+
 void die (FRESULT rc) {
   printf("Failed with rc=%u.\n", rc);
   while (1);
@@ -90,6 +107,9 @@ int main(void) {
   FILINFO fno;			/* File information object */
   UINT bw, br;
   unsigned int retval;
+
+  //bmppixel p = {1,2,3};
+  //printf("%u", p.b);
 
   setvbuf(stdin, NULL, _IONBF, 0);
   setvbuf(stdout, NULL, _IONBF, 0);
@@ -140,6 +160,9 @@ int main(void) {
   rc = f_opendir(&dir, "");
   if (rc) die(rc);
   
+  //store each instance of BMP files when they are listed
+  int bmpCount = 0;
+
   printf("\nDirectory listing...\n");
   for (;;) {
     rc = f_readdir(&dir, &fno);		/* Read a directory item */
@@ -148,6 +171,14 @@ int main(void) {
       printf("   <dir>  %s\n", fno.fname);
     else
       printf("%8lu  %s\n", fno.fsize, fno.fname);
+
+    //extract the last 3 characters
+    //if they == BMP, store the [0 to l - 4 for the file name
+    int l = strlen(fno.fname);
+    char * fType = fno.fname + (l - 4);
+    if (strcmp(".BMP", fType) == 0){
+      printf("THOT DETECTED %s\n", fType);
+    } 
   }
   if (rc) die(rc);
   
@@ -160,7 +191,11 @@ int main(void) {
  * Read in and use images from the sd card
  * convert is a linux program which can be used on the image
  * both for rotating and resizing the image
+ * example of using convert to resize a jpeg to the 128x160 geometry of the lcd:
+ * convert -resize 128x160! input.jpg output.jpg
  */
+
+   
 
   while (1);
 }
