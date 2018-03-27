@@ -125,7 +125,9 @@ int main(void) {
   delay(30);
   f3d_rtc_init();
   delay(30);
-  f3d_i2c1_init(); 
+  f3d_i2c1_init();
+  delay(30);
+  f3d_accel_init(); 
   delay(30);
   f3d_nunchuk_init();
   delay(30);
@@ -234,9 +236,41 @@ int main(void) {
 
   int choice = 1;
   char fileName[10];
+  float accVal[3];
 
   while (1){ 
     f3d_nunchuk_read(&n);
+    f3d_mag_read(magVal); 
+    f3d_accel_read(accVal);
+
+    //displayRotation holds which direction the lcd is rotated
+    //portrait right side up is 1, tilted to the right is 2
+    //portrait upside down is 3, tilted to the left is 4
+    int displayRotation; 
+
+    //used for rotation to detect portrait vs landscape viewing
+    float pitch = atan2(accVal[0], pow(accVal[1], 2) + pow(accVal[2], 2));
+    float roll = atan2(accVal[1], pow(accVal[0], 2) + pow(accVal[2], 2));
+    float heading = atan2(magVal[1], magVal[0]);
+
+    //taking heading stuff from lab7, need to test
+    double pi = 3.14;
+    printf("Pitch: %d Roll: %f Heading: %f \n", pitch, roll, heading);
+    if ((heading < -2.25) || (heading > 2.25)){
+      displayRotation = 1;
+    } //end if
+
+    else if (heading > 0.75){
+      displayRotation = 2;
+    } //end else if
+
+    else if ((heading < -0.75) || (heading < 0.75)){
+      displayRotation = 3;
+    } //end else if
+
+    else{
+      displayRotation = 4;
+    } //end else
 
     //255 = joystick pointed to right
     if (n.jx == 255){
@@ -268,7 +302,16 @@ int main(void) {
       strcpy(fileName, "KILLME.BMP");
     } //end else if
 
-    printf("Opening %s\n", fileName);
+    //there are 4 different orientations for the lcd
+    //upright/portrait     (1)
+    //left/landscape       (2)
+    //upside down/portrait (3)
+    //right/landscape      (4)
+    //assign orientation based on the above values to each pitch/roll value
+
+    
+
+    //printf("Opening %s\n", fileName);
   } //end while
 } //end main
 
