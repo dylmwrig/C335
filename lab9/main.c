@@ -96,11 +96,13 @@ void die (FRESULT rc) {
 FATFS Fatfs;		/* File system object */
 FIL Fil;		/* File object */
 BYTE Buff[128];		/* File read buffer */
+BITMAPINFOHEADER info;
+nunchuk_t n;
 
 int main(void) { 
   char footer[20];
   int count=0;
-  int i;
+  int i, j;
 
   FRESULT rc;			/* Result code */
   DIR dir;			/* Directory object */
@@ -123,18 +125,23 @@ int main(void) {
   delay(30);
   f3d_rtc_init();
   delay(30);
+  f3d_i2c1_init(); 
+  delay(30);
+  f3d_nunchuk_init();
+  delay(30);
 
-  f_mount(0, &Fatfs);		/* Register volume work area (never fails) */
+/*
+  f_mount(0, &Fatfs);		// Register volume work area (never fails) 
 
   printf("\nOpen an existing file (message.txt).\n");
     rc = f_open(&Fil, "MESSAGE.TXT", FA_READ);
   if (rc) die(rc);
- 
+
   printf("\nType the file content.\n");
   for (;;) {
-    rc = f_read(&Fil, Buff, sizeof Buff, &br);	/* Read a chunk of file */
-    if (rc || !br) break;			/* Error or end of file */
-    for (i = 0; i < br; i++)		        /* Type the data */
+    rc = f_read(&Fil, Buff, sizeof Buff, &br);	// Read a chunk of file 
+    if (rc || !br) break;			// Error or end of file 
+    for (i = 0; i < br; i++)		        // Type the data 
       putchar(Buff[i]);
   }
   if (rc) die(rc);
@@ -159,26 +166,15 @@ int main(void) {
   printf("\nOpen root directory.\n");
   rc = f_opendir(&dir, "");
   if (rc) die(rc);
-  
-  //store each instance of BMP files when they are listed
-  int bmpCount = 0;
-
   printf("\nDirectory listing...\n");
   for (;;) {
-    rc = f_readdir(&dir, &fno);		/* Read a directory item */
-    if (rc || !fno.fname[0]) break;	/* Error or end of dir */
+    rc = f_readdir(&dir, &fno);		// Read a directory item 
+    if (rc || !fno.fname[0]) break;	// Error or end of dir 
     if (fno.fattrib & AM_DIR)
       printf("   <dir>  %s\n", fno.fname);
     else
       printf("%8lu  %s\n", fno.fsize, fno.fname);
-
-    //extract the last 3 characters
-    //if they == BMP, store the [0 to l - 4 for the file name
-    int l = strlen(fno.fname);
-    char * fType = fno.fname + (l - 4);
-    if (strcmp(".BMP", fType) == 0){
-      printf("THOT DETECTED %s\n", fType);
-    } 
+ 
   }
   if (rc) die(rc);
   
@@ -186,19 +182,95 @@ int main(void) {
 
   rc = disk_ioctl(0,GET_SECTOR_COUNT,&retval);
   printf("%d %d\n",rc,retval);
-
+*/
  /* 
  * Read in and use images from the sd card
  * convert is a linux program which can be used on the image
  * both for rotating and resizing the image
  * example of using convert to resize a jpeg to the 128x160 geometry of the lcd:
  * convert -resize 128x160! input.jpg output.jpg
- */
+ */  
 
+
+/*
+  rc = f_open(&Fil, "OLDMAN.BMP", FA_READ);
+  delay(50); //delaying just in case
+
+  for(;;) {
+    // Read a chunk of file
+    rc = f_read(&Fil, Buff,sizeof Buff, &br);
+    if (rc || !br) break; // Error or end of file 
+
+    for(i = 0; i < br; i++)// Type the data 
+      printf("%d\n", (Buff[i]));
+  }
+
+  if (rc) die(rc);
+  //to convert the color to make it presentable on our lcd screen, you must bitwise shift color values
+  //3 for read, 3 for green, 2 for blue
+  //I am not sure if it matters which color you choose to shift by 2 so I'm choosing it arbitrarily
+ 
+  for(j = 160; j > 0; j--){
+    
+    rc = f_read(&Fil, info,sizeof info, &br);
+    printf("width %d height %d\n", info.width, info.height);
+
+    //rc = f_read(&Fil, Buff,sizeof Buff, &br);
+    if (rc) die(rc);
+    for (i = 0; i < 128; i++){
+      uint16_t color = ((uint16_t)(Buff[i].r >> 3)) << 11 | ((uint16_t) (Buff[i].g >> 3)) << 6 | (Buff[i].b >> 3);
+      f3d_lcd_drawPixel(i, j, color);
+    } //end for
+  } //end for 
+
+  printf("Displayed image\n");
+
+  rc = f_close(&Fil);
+*/
+  //files I'm going to read
+  //OLDMAN.BMP
+  //GOBLIN.BMP
+  //KILLME.BMP
+
+  int choice = 1;
+  char fileName[10];
+
+  while (1){ 
+    f3d_nunchuk_read(&n);
+
+    //255 = joystick pointed to right
+    if (n.jx == 255){
+      choice++;
    
+      if (choice > 3){
+        choice = 1;
+      } //end if
+    } //end if
+ 
+    //pointed to the left
+    else if (n.jx == 0){
+      choice--;
 
-  while (1);
-}
+      if (choice < 1){
+        choice = 3;
+      } //end if
+    } //end else if
+
+    if (choice == 1){
+      strcpy(fileName, "OLDMAN.BMP");
+    } //end if
+
+    else if (choice == 2){
+      strcpy(fileName, "GOBLIN.BMP");
+    } //end else if
+
+    else if (choice == 3){
+      strcpy(fileName, "KILLME.BMP");
+    } //end else if
+
+    printf("Opening %s\n", fileName);
+  } //end while
+} //end main
 
 #ifdef USE_FULL_ASSERT
 void assert_failed(uint8_t* file, uint32_t line) {
