@@ -47,16 +47,16 @@
 #include <string.h> //strlen
 
 //these structs are copied from the document about bmp inclusion
-struct bmpfile_magic {
+typedef struct bmpfile_magic {
   unsigned char magic[2];
-};
+} magic;
 
-struct bmpfile_header {
+typedef struct bmpfile_header {
   uint32_t filesz;
   uint16_t creator1;
   uint16_t creator2;
   uint32_t bmp_offset;
-};
+} header;
 
 typedef struct {
   uint32_t header_sz;
@@ -99,6 +99,8 @@ BYTE Buff[128];		/* File read buffer */
 BITMAPINFOHEADER info;
 nunchuk_t n;
 
+uint8_t junk[54];
+
 int main(void) { 
   char footer[20];
   int count=0;
@@ -127,14 +129,19 @@ int main(void) {
   delay(30);
   f3d_i2c1_init();
   delay(30);
+  f3d_mag_init();
+  delay(30);
   f3d_accel_init(); 
   delay(30);
   f3d_nunchuk_init();
   delay(30);
 
-/*
   f_mount(0, &Fatfs);		// Register volume work area (never fails) 
+  delay(30);
 
+  f3d_lcd_fillScreen(BLACK);
+
+/*
   printf("\nOpen an existing file (message.txt).\n");
     rc = f_open(&Fil, "MESSAGE.TXT", FA_READ);
   if (rc) die(rc);
@@ -181,10 +188,10 @@ int main(void) {
   if (rc) die(rc);
   
   printf("\nTest completed.\n");
-
-  rc = disk_ioctl(0,GET_SECTOR_COUNT,&retval);
-  printf("%d %d\n",rc,retval);
 */
+
+  //rc = disk_ioctl(0,GET_SECTOR_COUNT,&retval);
+  //printf("%d %d\n",rc,retval);
  /* 
  * Read in and use images from the sd card
  * convert is a linux program which can be used on the image
@@ -193,11 +200,9 @@ int main(void) {
  * convert -resize 128x160! input.jpg output.jpg
  */  
 
+  rc = f_open(&Fil, "OLDMAN.BMP", FA_READ);
 
 /*
-  rc = f_open(&Fil, "OLDMAN.BMP", FA_READ);
-  delay(50); //delaying just in case
-
   for(;;) {
     // Read a chunk of file
     rc = f_read(&Fil, Buff,sizeof Buff, &br);
@@ -205,30 +210,52 @@ int main(void) {
 
     for(i = 0; i < br; i++)// Type the data 
       printf("%d\n", (Buff[i]));
-  }
+  }*/
 
+  //read out all of the garbage in the file that we don't need
+  magic m;
+  header h;
+  uint8_t filler[54];
+
+/* original attempt to read in junk
+  if (rc) die(rc);
+
+  rc = f_read(&Fil, Buff, sizeof m, &br);
+  if (rc) die(rc);
+
+  rc = f_read(&Fil, Buff, sizeof h, &br);
+  if (rc) die(rc);
+
+  rc = f_read(&Fil, Buff, sizeof info, &br);
+*/
+  if (rc) die(rc);
+  //I looked it up and BMP files have 54 bits of header
+  rc = f_read(&Fil, filler, 54, &br);
   if (rc) die(rc);
   //to convert the color to make it presentable on our lcd screen, you must bitwise shift color values
   //3 for read, 3 for green, 2 for blue
   //I am not sure if it matters which color you choose to shift by 2 so I'm choosing it arbitrarily
  
-  for(j = 160; j > 0; j--){
+  /* Original attempt at converting image color, didn't work
+   * 
+  for(j = jSize; j > 0; j--){
     
-    rc = f_read(&Fil, info,sizeof info, &br);
+    rc = f_read(&Fil, Buff,sizeof Buff, &br);
     printf("width %d height %d\n", info.width, info.height);
 
     //rc = f_read(&Fil, Buff,sizeof Buff, &br);
     if (rc) die(rc);
-    for (i = 0; i < 128; i++){
-      uint16_t color = ((uint16_t)(Buff[i].r >> 3)) << 11 | ((uint16_t) (Buff[i].g >> 3)) << 6 | (Buff[i].b >> 3);
+    for (i = 0; i < iSize; i++){
+      uint16_t color = ((uint16_t)(Buff[i] >> 3)) << 11 | ((uint16_t) (Buff[i] >> 3)) << 6 | (Buff[i] >> 3);
       f3d_lcd_drawPixel(i, j, color);
     } //end for
   } //end for 
+  */
 
   printf("Displayed image\n");
 
   rc = f_close(&Fil);
-*/
+
   //files I'm going to read
   //OLDMAN.BMP
   //GOBLIN.BMP
@@ -236,7 +263,7 @@ int main(void) {
 
   int choice = 1;
   char fileName[10];
-  float accVal[3];
+  float accVal[3], magVal[3];
 
   while (1){ 
     f3d_nunchuk_read(&n);
