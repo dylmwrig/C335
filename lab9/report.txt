@@ -1,0 +1,18 @@
+Lab 9
+Author: Dylan Wright
+Partner: EJ Seong (we only really worked on intialization and the earliest parts of this program together)
+
+Q1) The CS_HIGH() macro allows for bit transfer, whereas CS_LOW() resets the data and states that we are not ready for data transfer. This relates to what we know about SPI because the same concepts are used in SPI transfer.
+
+Q2) You would simply replace the loop specified in the question, the while (i-- > 0) loop, with calls to the f3d_delay_uS function. The advantage of this is that this function will be more consistent by calling the neutral f3d_delay_uS function. This is because the original delay function relies on the process of whatever machine this is running on, which may vary system to system.
+
+Q3) One of the main advantages of DMA is that while you are performing DMA operations, the processor is in a state of "busy waiting" where the entire system isn't held up while waiting for the image display to complete. This is advantageous considering how expensive certain image conversions could potentially be. Freeing the processor to complete other tasks inherently increases the performance of the application. Additionally, DMA allows us to take advantage of hardware and increase speeds in a way that you cannot without DMA.
+
+Q4) The file allocation table contains the locations of different files in memory. Therefore, if an entry in the table becomes corrupted in some way, part of the file will be lost simply because you will no longer have the means to access it. It would be similar to allocating memory to a pointer, filling that memory with a value, then deleting the pointer without deallocating the memory. The data is still there but it may as well not be because you cannot use it.
+
+Q5) The difference is mainly in size. FAT32 is a revised FAT16 in which you can create larger partitions and support longer file names. 
+
+Difficulties:
+Conceptually, some of the image conversion/display stuff was difficult for me to understand. I've tried a lot of methods of reading in the bmp file and none of them ended up working. So I guess the entire lab was a difficulty.
+
+I learned about image conversion techniques and data transfer/storage. This is the most in depth I have gotten with lossy image conversion and image conversion in general. 
