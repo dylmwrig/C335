@@ -34,6 +34,10 @@
 
 /* Code: */
 
+/* Author: Dylan Wright
+ *
+ */
+
 #include <f3d_systick.h>
 #include <f3d_led.h> 
 #include <f3d_button.h>
@@ -41,9 +45,17 @@
 
 volatile int systick_flag = 0;
 
+/*
+ * Function to setup the initial rate of the timer
+ * pass the number of interrupts per second in as the divsor to the SysTick_Config function
+ */
 void f3d_systick_init(void) {
 }
 
+/*
+ * called on each interrupt
+ * clears the pending interrupt from the systick timer
+ */
 void SysTick_Handler(void) {
 }
 
