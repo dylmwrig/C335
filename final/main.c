@@ -1,4 +1,4 @@
-/*
+/*i
  * C335 Final Project
  * Author: Dylan Wright, solo dolo
  * 
@@ -18,9 +18,28 @@
 //#include <f3d_i2c.h>
 #include <stdio.h> 
 
+//obstacle struct
+//the obstacles are just rectangles
+//store the top left corner, bottom left corner, and width of the obstacle
+typedef struct Obstacle{
+  int topLeft;
+  int lowLeft;
+  int width;
+} Obstacle;
+
 //handle any necessary screen initialization 
 void screenInit(){
   f3d_lcd_fillScreen(WHITE);
+
+int i = 20;
+  //I tried doing this in a for loop and got a bug for some reason
+  while(i < 100){
+    f3d_lcd_drawPixel(i, 20, BLACK);
+    f3d_lcd_drawPixel(i, 60, BLACK);
+    f3d_lcd_drawPixel(i, 100, BLACK);
+    f3d_lcd_drawPixel(i, 140, BLACK);
+    i++;
+} //end while
 } //end screenInit
 
 /*
@@ -94,11 +113,22 @@ void updateGraphs(float oldPitch[80], float oldRoll[80], float newPitch, float n
 } //end updateGraphs
 */
 
-void updateScreen(){
+//draw the obstacle (rectangle) passed in
+void drawObst(struct Obstacle o){
   int i;
-  for (i = 0; i < 100; i++){
-    f3d_lcd_drawPixel(i, 20, BLACK);
+  for (i = o.lowLeft; i < o.topLeft; i++){
+    f3d_lcd_drawPixel(20, i, BLACK);
+    f3d_lcd_drawPixel((20 + o.width), i, BLACK);
   }
+
+  for (i = 20; i < (20 + o.width); i++){
+    f3d_lcd_drawPixel(i, o.lowLeft, BLACK);
+    f3d_lcd_drawPixel(i, o.topLeft, BLACK);
+  }
+} //end drawObst
+
+void updateScreen(struct Obstacle o){
+
 } //end updateScreen
 
 int main(){
@@ -126,13 +156,31 @@ int main(){
   }
 */
 
-    screenInit();
+    //screenInit();
 
+    f3d_lcd_fillScreen(BLACK);
+    f3d_lcd_fillScreen(WHITE);
+
+    delay(10);
+
+    Obstacle o = { .topLeft = 100, .lowLeft = 70, .width = 40 };
+
+    updateScreen(o);
   //break loop when the player has lost
   while(1){
-    updateScreen();
-  } //end while
-	
+    
+/*
+int i = 0;
+  //I tried doing this in a for loop and got a bug for some reason
+  while(i < 159){
+    f3d_lcd_drawPixel(20, i, BLACK);
+    f3d_lcd_drawPixel(80, i, RED);
+    //f3d_lcd_drawPixel(80, i, BLACK);
+    f3d_lcd_drawPixel(130, i, RED);
+    i++;
+} //end while
+*/
+  } //end while	
 } //end main
 
 #ifdef USE_FULL_ASSERT
