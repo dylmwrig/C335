@@ -18,13 +18,19 @@
 //#include <f3d_i2c.h>
 #include <stdio.h> 
 
+#define OBSTACLE_COUNT 2 //amount of obstacles to be generated at any time
+#define FAIL_MAX 3 //amount of failures before game over
+
+int failCount = 0;
+int succCount = 0;
+
 //obstacle struct
 //the obstacles are just rectangles
 //store the top left corner, bottom left corner, and width of the obstacle
 typedef struct Obstacle{
   int topLeft;
   int lowLeft;
-  int width;
+  int width; //not a const because I'll be reusing each Obstacle object to "spawn" new obstacles
 } Obstacle;
 
 //handle any necessary screen initialization 
@@ -127,8 +133,23 @@ void drawObst(struct Obstacle o){
   }
 } //end drawObst
 
-void updateScreen(struct Obstacle o){
+//pass the obstacles by reference for updating the points
+void updateScreen(struct Obstacle obs[OBSTACLE_COUNT]){
+  int i;
+  for (i = 0; i < OBSTACLE_COUNT; i++){
+    drawObst(obs[i]);
+    obs[i].topLeft--;
+    obs[i].lowLeft--;
 
+    //TODO
+    //is there a possible consequence to drawing pixels that are off screen?
+    //if not, I'm just going to check when the obstacle is being drawn entirely off screen
+    //when it is off screen, generate new values for the points
+    //effectively "spawning" a new obstacle 
+    if ((obs[i].topLeft + obs[i].width) == 0){
+      //reassign values
+    } //end if
+  } //end for
 } //end updateScreen
 
 int main(){
@@ -163,9 +184,24 @@ int main(){
 
     delay(10);
 
-    Obstacle o = { .topLeft = 100, .lowLeft = 70, .width = 40 };
+    struct Obstacle obs[OBSTACLE_COUNT];
 
-    updateScreen(o);
+    //random test values
+    //fill these in later
+    //idk whether I should randomly generate these or select from a fixed set of points
+    //maybe have like 3 different heights that they could be at and randomly assign them
+    int i;
+    for (i = 0; i < OBSTACLE_COUNT; i++){
+      obs[i].topLeft = 0;
+      obs[i].lowLeft = 0;
+      obs[i].width = 5;
+    } //end for
+
+    //using the first obstacle for testing
+    Obstacle o = { .topLeft = 100, .lowLeft = 70, .width = 40 };
+    obs[0] = o;
+
+    updateScreen(obs);
   //break loop when the player has lost
   while(1){
     
