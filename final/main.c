@@ -308,18 +308,49 @@ int main(){
   drawObst(p); 
 
   drawObst(o);
+  
+  //jumping keeps track of if the player is currently in a jump animation
+  //playerUp keeps track of the trajectory of the jump: moving up or down
+  //jumpFrame keeps track of which frame of the jump animation we are on
+  bool jumping = false, playerUp = false;
+  int jumpFrame = 0;
   //updateScreen(obs);
   while(1){
     f3d_nunchuk_read(nun_point);
     if (nun_point->jy == 255){
-      //movePlayer(&p, true);
-      //drawObst(p);
-      jump(&p);
+      //only jump if a jump isn't currently happening
+      if (!jumping){
+        jumping = true;
+        playerUp = true;
+        jumpFrame = 0;
+      } //end if
     } //end if
-    else if (nun_point->jy == 0){
-      movePlayer(&p, false);
-      drawObst(p);
-    } //end else if
+
+    if (jumping){
+      if (playerUp){
+        //start a downwards trajectory if the player as at the top of the arc
+        if (jumpFrame == 30){
+          playerUp = false;
+        } //end if 
+
+        else{
+          movePlayer(&p, true);
+          drawObst(p);
+        } //end else
+      } //end if
+
+      //otherwise, the player is falling
+      else{
+        if (jumpFrame == 0){
+          jumping = false;
+        } //end if
+
+        else{
+          movePlayer(&p, false);
+          drawObst(p);
+        } //end else
+      } //end else 
+    } //end if
     //delete the pixels outside of the current range of the box after movement
     for (i = o.lowY; i <= o.topY; i++){
       if (o.rightX <= X_BOUND){
@@ -334,6 +365,16 @@ int main(){
     drawObst(o);
     if (hitDetect(p, o)){
       break;
+    } //end if
+
+    if (jumping){
+      if (playerUp){
+        jumpFrame++;
+      } //end if
+
+      else{
+        jumpFrame--;
+      } //end else
     } //end if
   } //end while
   //printf("%d %d\n", nun_point->jx, nun_point->jy);
