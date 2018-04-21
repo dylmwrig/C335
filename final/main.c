@@ -13,10 +13,12 @@
  */
 
 #include <stm32f30x.h>  // Pull in include files for F30x standard drivers  
-//#include <f3d_uart.h>
+#include <f3d_uart.h>
 #include <f3d_lcd_sd.h>
-//#include <f3d_i2c.h>
+#include <f3d_i2c.h>
+#include <f3d_nunchuk.h>
 #include <stdio.h> 
+#include <stdbool.h>
 
 #define OBSTACLE_COUNT 2 //amount of obstacles to be generated at any time
 #define FAIL_MAX 3 //amount of failures before game over
@@ -79,18 +81,16 @@ bool hitDetect(struct Object player, struct Object obs){
     xHit = true;
   } //end if
 
-  else if ((obs.leftX <= player.rightX) && (player.rightX <= obs.rightX)){
+  if ((obs.leftX <= player.rightX) && (player.rightX <= obs.rightX)){
     xHit = true;
-  } //end else if
+  } //end if
 
-  //TODO
-  //change the signs when transferring this to the main final directory 
   if (xHit){
-    if ((obs.lowY <= player.lowY) && (player.lowY >= obs.lowY)){
+    if ((obs.lowY <= player.lowY) && (player.lowY <= obs.topY)){
       hit = true;
     } //end if
 
-    if ((obs.topY <= player.topY) && (player.topY >= obs.topY)){
+    if ((obs.lowY <= player.topY) && (player.topY <= obs.topY)){
       hit = true;
     } //end if
   } //end if
@@ -172,24 +172,58 @@ void updateGraphs(float oldPitch[80], float oldRoll[80], float newPitch, float n
 //function to move the player aka update their y coordinates
 //draw the screen after this
 //moveUp = true if the player is moving upwards
-void movePlayer(struct Object player, bool moveUp){
+void movePlayer(struct Object * p, bool moveUp){
+  int i;
+
   //prevent the player from moving downwards if they are already on the floor
   if(!moveUp){
-    if (player.lowY == 0){
+    if (p->lowY == 0){
       return;
     } //end if
-    player.topY--;
+
+    for (i = p->leftX; i <= p->rightX; i++){
+      f3d_lcd_drawPixel(p->lowY, i, WHITE);
+      f3d_lcd_drawPixel(p->topY, i, WHITE);
+    } //end for
+
+    p->topY--;
+    p->lowY--;
   } //end if
 
   else {
-    if (player.topY == 65){
+    if (p->topY == Y_BOUND){
       return;
     } //end if
-    player.topY++;
+
+    for (i = p->leftX; i <= p->rightX; i++){
+      f3d_lcd_drawPixel(p->lowY, i, WHITE);
+      f3d_lcd_drawPixel(p->topY, i, WHITE);
+    } //end for
+
+    p->topY++;
+    p->lowY++;
   } //end else
 } //end movePlayer
 
+//press c to jump
+//call movePlayer up a number of times, call it downwards
+void jump(struct Object * p){
+  int i;
+  for (i = 0; i < 30; i++){
+    movePlayer(p, true);
+    drawObst(*p);
+  } //end for
+
+  for (i = 0; i < 30; i++){
+    movePlayer(p, false);
+    drawObst(*p);
+  } //end for
+} //end jump
+
 //draw the obstacle (rectangle) passed in
+//the reason the obstacle is drawn as a solid object is 
+//I'm only deleting the rightmost line after the object moves
+//so the "solid line" is really just
 //TODO
 //this may be inefficient
 //you may want to explore other ways to do this that may be more efficient
@@ -237,7 +271,7 @@ int main(){
   delay(10);
   f3d_i2c1_init();
   delay(10);
-  //f3d_nunchuk_init();
+  f3d_nunchuk_init();
   delay(10);
   f3d_lcd_init();
   delay(10);
@@ -246,56 +280,63 @@ int main(){
   setvbuf(stdout, NULL, _IONBF, 0);
   setvbuf(stderr, NULL, _IONBF, 0);
 
-/*
-  int i = 20;
-  while(i < 100){
-    f3d_lcd_drawPixel(i, 20, BLACK);
-    f3d_lcd_drawPixel(i, 60, BLACK);
+  //screenInit();
 
-    f3d_lcd_drawPixel(i, 100, BLACK);
-    f3d_lcd_drawPixel(i, 140, BLACK);
-  }
-*/
+  f3d_lcd_fillScreen(BLACK);
+  f3d_lcd_fillScreen(WHITE);
 
-    //screenInit();
+  delay(10);
 
-    f3d_lcd_fillScreen(BLACK);
-    f3d_lcd_fillScreen(WHITE);
+  struct Object obs[OBSTACLE_COUNT];
+  nunchuk_t nun;
+  nunchuk_t * nun_point = &nun;
 
-    delay(10);
+  //random test values
+  int i;
+  for (i = 0; i < OBSTACLE_COUNT; i++){
+    obs[i].topY = 0;
+    obs[i].lowY = 0;
+    obs[i].leftX = 0;
+    obs[i].rightX = 0;
+  } //end for
 
-    struct Object obs[OBSTACLE_COUNT];
+  //using the first obstacle for testing
+  Object o = {.topY = 60, .lowY = 10, .leftX = X_BOUND, .rightX = 210};
+  obs[0] = o;
 
-    //random test values
-    int i;
-    for (i = 0; i < OBSTACLE_COUNT; i++){
-      obs[i].topY = 0;
-      obs[i].lowY = 0;
-      obs[i].leftX = 0;
-      obs[i].rightX = 0;
-    } //end for
+  Object p = {.topY = 40, .lowY = 0, .leftX = 5, .rightX = 10};
+  drawObst(p); 
 
-    //using the first obstacle for testing
-    Object o = {.topY = 60, .lowY = 10, .leftX = 160, .rightX = 210};
-    obs[0] = o;
-
-    Object p = {.topY = 
-
-    drawObst(o);
-    //updateScreen(obs);
+  drawObst(o);
+  //updateScreen(obs);
   while(1){
+    f3d_nunchuk_read(nun_point);
+    if (nun_point->jy == 255){
+      //movePlayer(&p, true);
+      //drawObst(p);
+      jump(&p);
+    } //end if
+    else if (nun_point->jy == 0){
+      movePlayer(&p, false);
+      drawObst(p);
+    } //end else if
+    //delete the pixels outside of the current range of the box after movement
+    for (i = o.lowY; i <= o.topY; i++){
+      if (o.rightX <= X_BOUND){
+        f3d_lcd_drawPixel(i, o.rightX, WHITE); 
+      } //end if
+      if (o.leftX >= 0){
+        f3d_lcd_drawPixel(i, o.leftX, WHITE);
+      } //end if
+    } //end for
     o.leftX--;
     o.rightX--;
-
-    //delete the pixels outside of the current range of the box after movement
-    if (o.rightX < 160){
-      int repX = o.rightX + 1;
-      for (i = o.lowY; i <= o.topY; i++){
-        f3d_lcd_drawPixel(i, repX, WHITE); 
-      } //end for
+    drawObst(o);
+    if (hitDetect(p, o)){
+      break;
     } //end if
-    drawObst(o); 
-  } //end while	
+  } //end while
+  //printf("%d %d\n", nun_point->jx, nun_point->jy);
 } //end main
 
 #ifdef USE_FULL_ASSERT
