@@ -19,17 +19,14 @@
 #include <f3d_nunchuk.h>
 #include <stdio.h> 
 #include <stdbool.h>
+#include <stdlib.h> //RNG
 
 #define OBSTACLE_COUNT 2 //amount of obstacles to be generated at any time
 #define FAIL_MAX 3 //amount of failures before game over
 #define X_BOUND 160
 #define Y_BOUND 130
 
-int failCount = 0;
-int succCount = 0;
-
 //obstacle struct
-//the obstacles are just rectangles
 //store the locations of the top edge, bottom edge, left, and right edge
 typedef struct Object{
   int topY;
@@ -40,10 +37,10 @@ typedef struct Object{
 
 struct Object genOb(){
   Object o;
-  o.lowY = rand() % 45;
-  o.topY = o.lowY + 20; //temporary obstacle height
-  o.leftX = 80;
-  o.rightX = o.leftX + (rand() % 20) + 15; //define the width of the rectangle to be 30 pixels minimum
+  o.lowY = rand() % 65;
+  o.topY = o.lowY + 40; //arbitrary size for the obstacle
+  o.leftX = X_BOUND;
+  o.rightX = o.leftX + (rand() % 40) + 15; //define the width of the rectangle to be 30 pixels minimum
 
   return o;
 } //end genOb
@@ -300,13 +297,13 @@ int main(){
     obs[i].rightX = 0;
   } //end for
 
-  //using the first obstacle for testing
-  Object o = {.topY = 60, .lowY = 10, .leftX = X_BOUND, .rightX = 210};
-  obs[0] = o;
+  obs[0] = genOb();  
 
   Object p = {.topY = 40, .lowY = 0, .leftX = 5, .rightX = 10};
-  drawObst(p); 
 
+  Object o = obs[0]; //used for testing
+
+  drawObst(p); 
   drawObst(o);
   
   //jumping keeps track of if the player is currently in a jump animation
@@ -314,6 +311,9 @@ int main(){
   //jumpFrame keeps track of which frame of the jump animation we are on
   bool jumping = false, playerUp = false;
   int jumpFrame = 0;
+ 
+  int score = 0, failures = 0;
+
   //updateScreen(obs);
   while(1){
     f3d_nunchuk_read(nun_point);
@@ -351,6 +351,12 @@ int main(){
         } //end else
       } //end else 
     } //end if
+
+    if (o.rightX < 0){
+      score++;
+      o = genOb();      
+    } //end if
+
     //delete the pixels outside of the current range of the box after movement
     for (i = o.lowY; i <= o.topY; i++){
       if (o.rightX <= X_BOUND){
@@ -363,8 +369,18 @@ int main(){
     o.leftX--;
     o.rightX--;
     drawObst(o);
+    //printf("%d %d %d\n", p.topY, o.lowY, o.topY);
+    //printf("%d %d %d\n", p.rightX, o.leftX, o.rightX);
     if (hitDetect(p, o)){
-      break;
+      break;   
+/*  
+      failures++;
+
+      o = genOb();
+      if (failures == FAIL_MAX){
+        break;
+      } //end if
+*/
     } //end if
 
     if (jumping){
@@ -377,7 +393,7 @@ int main(){
       } //end else
     } //end if
   } //end while
-  //printf("%d %d\n", nun_point->jx, nun_point->jy);
+  //printf("Final Score: %d", score);
 } //end main
 
 #ifdef USE_FULL_ASSERT
