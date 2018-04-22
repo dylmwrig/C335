@@ -23,7 +23,6 @@
 #include <stdio.h> 
 #include <stdbool.h>
 #include <stdlib.h> //RNG
-
 #define OBSTACLE_COUNT 2 //amount of obstacles to be generated at any time
 #define FAIL_MAX 2 //amount of failures before game over
 #define X_BOUND 160
@@ -47,6 +46,11 @@ struct Object genOb(){
 
   return o;
 } //end genOb
+
+void die (FRESULT rc) {
+  printf("Failed with rc=%u.\n", rc);
+  while(1);
+}
 
 //handle any necessary screen initialization 
 void screenInit(){
@@ -272,7 +276,8 @@ int main(){
   //might not need all of these
   FATFS Fatfs;
   FIL Fil;
-  
+  BYTE Buff[128]; 
+ 
   FRESULT rc;
   DIR dir;
   FILINFO fno;
@@ -408,6 +413,39 @@ int main(){
     } //end if
   } //end while
   printf("Final Score: %d", score);
+ 
+/*
+  printf("\nCreate a new file (hello.txt).\n");
+  rc = f_open(&Fil, "HELLO.TXT", FA_WRITE | FA_CREATE_ALWAYS);
+  if (rc) die(rc);
+  
+  printf("\nWrite a text data. (Hello world!)\n");
+  rc = f_write(&Fil, "Your score: xd\r\n", 14, &bw);
+  if (rc) die(rc);
+  printf("%u bytes written.\n", bw);
+  
+  printf("\nClose the file.\n");
+  rc = f_close(&Fil);
+  if (rc) die(rc);
+*/
+/*
+  printf("\nOpen an existing file (message.txt).\n");
+    rc = f_open(&Fil, "MESSAGE.TXT", FA_READ);
+  if (rc) die(rc);
+ 
+  printf("\nType the file content.\n");
+  for (;;) {
+    rc = f_read(&Fil, Buff, sizeof Buff, &br);	
+    if (rc || !br) break;			
+    for (i = 0; i < br; i++)		       
+      putchar(Buff[i]);
+  }
+  if (rc) die(rc);
+  
+  printf("\nClose the file.\n");
+  rc = f_close(&Fil);
+  if (rc) die(rc);
+  
   printf("\nCreate a new file (hello.txt).\n");
   rc = f_open(&Fil, "HELLO.TXT", FA_WRITE | FA_CREATE_ALWAYS);
   if (rc) die(rc);
@@ -419,7 +457,29 @@ int main(){
   
   printf("\nClose the file.\n");
   rc = f_close(&Fil);
-  if (rc) die(rc);  
+  if (rc) die(rc);
+  */
+  printf("\nOpen root directory.\n");
+  rc = f_opendir(&dir, "");
+  if (rc) die(rc);
+  
+  printf("\nDirectory listing...\n");
+  for (;;) {
+    rc = f_readdir(&dir, &fno);		/* Read a directory item */
+    if (rc || !fno.fname[0]) break;	/* Error or end of dir */
+    if (fno.fattrib & AM_DIR)
+      printf("   <dir>  %s\n", fno.fname);
+    else
+      printf("%8lu  %s\n", fno.fsize, fno.fname);
+  }
+  if (rc) die(rc);
+  
+  printf("\nTest completed.\n");
+
+  rc = disk_ioctl(0,GET_SECTOR_COUNT,&retval);
+  printf("%d %d\n",rc,retval);
+
+  
 } //end main
 
 #ifdef USE_FULL_ASSERT

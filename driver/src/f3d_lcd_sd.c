@@ -204,6 +204,7 @@ void f3d_lcd_init(void) {
   }
 }
 
+/*
 static int xchng_datablock(SPI_TypeDef *SPIx, int half, const void *tbuf, void *rbuf, unsigned count) {
   DMA_InitTypeDef DMA_InitStructure;
   uint16_t dummy[] = {0xffff};
@@ -284,6 +285,7 @@ static int xchng_datablock(SPI_TypeDef *SPIx, int half, const void *tbuf, void *
   SPI_I2S_DMACmd(SPIx, SPI_I2S_DMAReq_Rx | SPI_I2S_DMAReq_Tx, DISABLE);
   return count;
 }
+*/
 
 static void LcdWrite(char dc,const char *data,int nbytes) {
   GPIO_WriteBit(LCD_PORT,GPIO_PIN_DC,dc); // dc 1 = data , 0 = control
@@ -299,6 +301,7 @@ static void LcdWrite16(char dc,const uint16_t *data,int cnt) {
   GPIO_SetBits(LCD_PORT,GPIO_PIN_SCE);
 }
 
+/* new version for audio player
 int spiReadWrite(SPI_TypeDef *SPIx, uint8_t *rbuf,
      const uint8_t *tbuf, int cnt, uint16_t speed) {
   int i;
@@ -320,8 +323,9 @@ int spiReadWrite(SPI_TypeDef *SPIx, uint8_t *rbuf,
     return i;
   }
 }
+*/
 
-/* old version
+// old version
 int spiReadWrite(SPI_TypeDef *SPIx,uint8_t *rbuf, const uint8_t *tbuf, int cnt, uint16_t speed) {
   int i;
   int timeout;
@@ -345,8 +349,8 @@ int spiReadWrite(SPI_TypeDef *SPIx,uint8_t *rbuf, const uint8_t *tbuf, int cnt, 
   }
   return i;
 }
-*/
 
+/* new version for audio player
 int spiReadWrite16(SPI_TypeDef *SPIx, uint16_t *rbuf,
            const uint16_t *tbuf, int cnt, uint16_t speed) {
   int i;
@@ -369,8 +373,8 @@ int spiReadWrite16(SPI_TypeDef *SPIx, uint16_t *rbuf,
   SPI_DataSizeConfig(SPIx, SPI_DataSize_8b);
   return i;
 }
+*/
 
-/* old version
 int spiReadWrite16(SPI_TypeDef *SPIx,uint8_t *rbuf, const uint16_t *tbuf, int cnt, uint16_t speed) {
   int i;
   
@@ -397,7 +401,6 @@ int spiReadWrite16(SPI_TypeDef *SPIx,uint8_t *rbuf, const uint16_t *tbuf, int cn
 
   return i;
 }
-*/
 
 void f3d_lcd_setAddrWindow ( uint16_t x0 , uint16_t y0 , uint16_t x1 , uint16_t y1 , uint8_t madctl) {
   madctl = MADVAL ( madctl );
