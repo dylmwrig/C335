@@ -17,6 +17,9 @@
 #include <f3d_lcd_sd.h>
 #include <f3d_i2c.h>
 #include <f3d_nunchuk.h>
+#include <f3d_rtc.h>
+#include <ff.h>
+#include <diskio.h>
 #include <stdio.h> 
 #include <stdbool.h>
 #include <stdlib.h> //RNG
@@ -256,12 +259,28 @@ int main(){
   delay(10);
   f3d_nunchuk_init();
   delay(10);
+  f3d_rtc_init();
+  delay(10);
   f3d_lcd_init();
   delay(10);
 
   setvbuf(stdin, NULL, _IONBF, 0);
   setvbuf(stdout, NULL, _IONBF, 0);
   setvbuf(stderr, NULL, _IONBF, 0);
+
+  //copied from lab 9
+  //might not need all of these
+  FATFS Fatfs;
+  FIL Fil;
+  
+  FRESULT rc;
+  DIR dir;
+  FILINFO fno;
+  UINT bw, br;
+  unsigned int retval;
+
+  f_mount(0, &Fatfs); //register volume work area (never fails)
+  delay(10);
 
   //screenInit();
 
@@ -389,6 +408,18 @@ int main(){
     } //end if
   } //end while
   printf("Final Score: %d", score);
+  printf("\nCreate a new file (hello.txt).\n");
+  rc = f_open(&Fil, "HELLO.TXT", FA_WRITE | FA_CREATE_ALWAYS);
+  if (rc) die(rc);
+  
+  printf("\nWrite a text data. (Hello world!)\n");
+  rc = f_write(&Fil, "Hello world!\r\n", 14, &bw);
+  if (rc) die(rc);
+  printf("%u bytes written.\n", bw);
+  
+  printf("\nClose the file.\n");
+  rc = f_close(&Fil);
+  if (rc) die(rc);  
 } //end main
 
 #ifdef USE_FULL_ASSERT
