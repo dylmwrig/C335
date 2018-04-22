@@ -22,7 +22,7 @@
 #include <stdlib.h> //RNG
 
 #define OBSTACLE_COUNT 2 //amount of obstacles to be generated at any time
-#define FAIL_MAX 3 //amount of failures before game over
+#define FAIL_MAX 2 //amount of failures before game over
 #define X_BOUND 160
 #define Y_BOUND 130
 
@@ -218,9 +218,6 @@ void jump(struct Object * p){
 } //end jump
 
 //draw the obstacle (rectangle) passed in
-//the reason the obstacle is drawn as a solid object is 
-//I'm only deleting the rightmost line after the object moves
-//so the "solid line" is really just
 //TODO
 //this may be inefficient
 //you may want to explore other ways to do this that may be more efficient
@@ -235,17 +232,6 @@ void drawObst(struct Object o){
     f3d_lcd_drawPixel(y, o.leftX, BLACK);
     f3d_lcd_drawPixel(y, o.rightX, BLACK);
   } //end for
-/*  
-  for (x = o.leftX; x < o.rightX; x++){
-    for (y = o.lowY; y < o.topY; y++){
-      if ((y < Y_BOUND) && (x < X_BOUND)
-       && (y > 0) && (x > 0)){
-        //because I'm using the screen in horizontal mode, reverse the x and y values when drawing
-        f3d_lcd_drawPixel(y, x, BLACK); 
-      } //end if
-    } //end for
-  } //end for
-*/
 } //end drawObst
 
 //pass the obstacles by reference for updating the points
@@ -369,18 +355,27 @@ int main(){
     o.leftX--;
     o.rightX--;
     drawObst(o);
-    //printf("%d %d %d\n", p.topY, o.lowY, o.topY);
-    //printf("%d %d %d\n", p.rightX, o.leftX, o.rightX);
     if (hitDetect(p, o)){
-      break;   
-/*  
       failures++;
+
+      //copied from drawObst
+      //TODO
+      //see if you can make color a parameter later on
+      int x, y;
+      for (x = o.leftX; x <= o.rightX; x++){
+        f3d_lcd_drawPixel(o.lowY, x, WHITE);
+        f3d_lcd_drawPixel(o.topY, x, WHITE);
+      } //end for
+ 
+      for (y = o.lowY; y <= o.topY; y++){
+        f3d_lcd_drawPixel(y, o.leftX, WHITE);
+        f3d_lcd_drawPixel(y, o.rightX, WHITE);
+      } //end for
 
       o = genOb();
       if (failures == FAIL_MAX){
         break;
       } //end if
-*/
     } //end if
 
     if (jumping){
@@ -393,7 +388,7 @@ int main(){
       } //end else
     } //end if
   } //end while
-  //printf("Final Score: %d", score);
+  printf("Final Score: %d", score);
 } //end main
 
 #ifdef USE_FULL_ASSERT
