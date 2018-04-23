@@ -43,14 +43,14 @@ int main(void){
  //initialization
   f3d_led_init();
   f3d_user_btn_init();
-  f3d_gyro_init();
+  //f3d_gyro_init();
   f3d_uart_init();
  
   setvbuf(stdin, NULL, _IONBF,0);
   setvbuf(stdout, NULL, _IONBF,0);
   setvbuf(stderr, NULL, _IONBF,0);
 
-  bool printTrue = false;
+  bool printTrue = true;
 
   while(1){
     f3d_led_on(1);

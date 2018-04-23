@@ -41,10 +41,10 @@ void f3d_i2c2_init() {
 // I2C GPIO Initialization and Alternate Function Selection
   /******************vvvvvvvvvvvvvYOUR CODE GOES HEREvvvvvvvvvvvvvv***********************/
 
-  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIB, ENABLE);
+  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
   GPIO_InitTypeDef GPIO_InitStructure;
   GPIO_StructInit(&GPIO_InitStructure);
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7;
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9 | GPIO_Pin_10;
   GPIO_InitStructure.GPIO_Mode=GPIO_Mode_AF;
   GPIO_InitStructure.GPIO_OType= GPIO_OType_PP;
   GPIO_InitStructure.GPIO_Speed=GPIO_Speed_50MHz;

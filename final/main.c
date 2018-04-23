@@ -16,6 +16,7 @@
 #include <f3d_uart.h>
 #include <f3d_lcd_sd.h>
 #include <f3d_i2c.h>
+#include <f3d_i2c2.h>
 #include <f3d_nunchuk.h>
 #include <f3d_rtc.h>
 #include <ff.h>
@@ -257,20 +258,28 @@ void updateScreen(struct Object obs[OBSTACLE_COUNT]){
 } //end updateScreen
 
 int main(){
+  setvbuf(stdin, NULL, _IONBF, 0);
+  setvbuf(stdout, NULL, _IONBF, 0);
+  setvbuf(stderr, NULL, _IONBF, 0);
+
   f3d_uart_init();
   delay(10);
+
   f3d_i2c1_init();
   delay(10);
+  f3d_i2c2_init();
+  delay(10);
+  printf("Before nunchuk, after i2c2");
   f3d_nunchuk_init();
   delay(10);
+  
+  printf("Idk man");
   f3d_rtc_init();
   delay(10);
   f3d_lcd_init();
   delay(10);
 
-  setvbuf(stdin, NULL, _IONBF, 0);
-  setvbuf(stdout, NULL, _IONBF, 0);
-  setvbuf(stderr, NULL, _IONBF, 0);
+   printf("After init");
 
   //copied from lab 9
   //might not need all of these
@@ -323,6 +332,8 @@ int main(){
   int jumpFrame = 0;
  
   int score = 0, failures = 0;
+
+  printf("Before while loop\n");
 
   //updateScreen(obs);
   while(1){

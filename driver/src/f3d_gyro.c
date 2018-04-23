@@ -2,12 +2,8 @@
 #include <stm32f30x.h>
 
 /*
- ************************************************************************
-     I HAVEN'T TESTED ANY OF THIS YET
-     I AM SHOOTING OFF THE HIP AND WRITING CODE WITHOUT THE BOARD ATM SO TEST THIS
- * 
  * Author: Dylan Wright
- * Partner: none this time
+ * Partner: none this time, I was sick
  * 
  */
 

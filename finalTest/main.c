@@ -13,6 +13,9 @@
 #define PLAYER_X_LOC 5 //Player struct only keeps track of y location
                        //x location can be predefined to always be at a specific x location
 
+//globals
+int SCORE = 0;
+
 //the obstacle is a rectangle
 //store the location of the upper and lower edge of the rectangle
 //the width
@@ -49,11 +52,11 @@ bool hitDetect(struct Object player, struct Object obs){
   //TODO
   //change the signs when transferring this to the main final directory 
   if (xHit){
-    if ((obs.lowY <= player.lowY) && (player.lowY >= obs.lowY)){
+    if ((obs.lowY <= player.lowY) && (player.lowY <= obs.topY)){
       hit = true;
     } //end if
 
-    if ((obs.topY <= player.topY) && (player.topY >= obs.topY)){
+    if ((obs.lowY <= player.topY) && (player.topY <= obs.topY)){
       hit = true;
     } //end if
   } //end if
@@ -131,6 +134,9 @@ int main(){
   int screen[80][65] = {0}; //SCALE THE SCREEN BY 1/2 FOR TESTING
   int i, j;
 
+  FILE * scores;
+  scores = fopen("scores.txt", "w+");
+
   //set seed
   time_t t;
   srand((unsigned) time(&t));
@@ -148,6 +154,7 @@ int main(){
 
   bool gg = true;
   while(gg){
+
     for (i = 0; i < 1; i++){
       obs[i].leftX--;
       obs[i].rightX--;
@@ -165,6 +172,7 @@ int main(){
 
       if (obs[i].rightX < 0){
         obs[i] = genOb();
+        SCORE++;
       } //end if
     } //end for
 
@@ -172,4 +180,9 @@ int main(){
 
     usleep(90000);
   } //end while
+
+  
+
+  fprintf(scores, "Your score: %d\n", SCORE);
+  fclose(scores);
 } //end main

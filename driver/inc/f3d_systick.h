@@ -38,8 +38,7 @@
 #define SYSTICK_INT_SEC 100
 
 void f3d_systick_init(void);
-
-
+void SysTick_Handler(void);
 
 /* f3d_systick.h ends here */
 

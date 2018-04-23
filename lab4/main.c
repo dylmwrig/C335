@@ -56,9 +56,9 @@ int main(void) {
 
   while(1){
     //was told to just comment out the original stuff from this assignment
-    //putchar('a');
-    //putchar(getchar());
-    //printf("Hello world");
+    putchar('a');
+    putchar(getchar());
+    printf("Hello world");
  
     //the following is copied from wc.c in lab 2
     int c; //check end of file

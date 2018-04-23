@@ -1,11 +1,11 @@
-2018-02-01T19:48:19 INFO src/stlink-common.c: Loading device parameters....
-2018-02-01T19:48:19 INFO src/stlink-common.c: Device connected is: F3 device, id 0x10036422
-2018-02-01T19:48:19 INFO src/stlink-common.c: SRAM size: 0xa000 bytes (40 KiB), Flash: 0x40000 bytes (256 KiB) in pages of 2048 bytes
-2018-02-01T19:48:19 INFO src/stlink-common.c: Attempting to write 20728 (0x50f8) bytes to stm32 address: 134217728 (0x8000000)
-Flash page at addr: 0x08000000 erasedFlash page at addr: 0x08000800 erasedFlash page at addr: 0x08001000 erasedFlash page at addr: 0x08001800 erasedFlash page at addr: 0x08002000 erasedFlash page at addr: 0x08002800 erasedFlash page at addr: 0x08003000 erasedFlash page at addr: 0x08003800 erasedFlash page at addr: 0x08004000 erasedFlash page at addr: 0x08004800 erasedFlash page at addr: 0x08005000 erased2018-02-01T19:48:19 INFO src/stlink-common.c: Finished erasing 11 pages of 2048 (0x800) bytes
-2018-02-01T19:48:19 INFO src/stlink-common.c: Starting Flash write for VL/F0/F3 core id
-2018-02-01T19:48:19 INFO src/stlink-common.c: Successfully loaded flash loader in sram
+2018-03-05T17:30:00 INFO src/stlink-common.c: Loading device parameters....
+2018-03-05T17:30:00 INFO src/stlink-common.c: Device connected is: F3 device, id 0x10036422
+2018-03-05T17:30:00 INFO src/stlink-common.c: SRAM size: 0xa000 bytes (40 KiB), Flash: 0x40000 bytes (256 KiB) in pages of 2048 bytes
+2018-03-05T17:30:00 INFO src/stlink-common.c: Attempting to write 44276 (0xacf4) bytes to stm32 address: 134217728 (0x8000000)
+Flash page at addr: 0x08000000 erasedFlash page at addr: 0x08000800 erasedFlash page at addr: 0x08001000 erasedFlash page at addr: 0x08001800 erasedFlash page at addr: 0x08002000 erasedFlash page at addr: 0x08002800 erasedFlash page at addr: 0x08003000 erasedFlash page at addr: 0x08003800 erasedFlash page at addr: 0x08004000 erasedFlash page at addr: 0x08004800 erasedFlash page at addr: 0x08005000 erasedFlash page at addr: 0x08005800 erasedFlash page at addr: 0x08006000 erasedFlash page at addr: 0x08006800 erasedFlash page at addr: 0x08007000 erasedFlash page at addr: 0x08007800 erasedFlash page at addr: 0x08008000 erasedFlash page at addr: 0x08008800 erasedFlash page at addr: 0x08009000 erasedFlash page at addr: 0x08009800 erasedFlash page at addr: 0x0800a000 erasedFlash page at addr: 0x0800a800 erased2018-03-05T17:30:01 INFO src/stlink-common.c: Finished erasing 22 pages of 2048 (0x800) bytes
+2018-03-05T17:30:01 INFO src/stlink-common.c: Starting Flash write for VL/F0/F3 core id
+2018-03-05T17:30:01 INFO src/stlink-common.c: Successfully loaded flash loader in sram
 
-  0/10 pages written  1/10 pages written  2/10 pages written  3/10 pages written  4/10 pages written  5/10 pages written  6/10 pages written  7/10 pages written  8/10 pages written  9/10 pages written 10/10 pages written2018-02-01T19:48:21 INFO src/stlink-common.c: Starting verification of write complete
-2018-02-01T19:48:21 INFO src/stlink-common.c: Flash written and verified! jolly good!
+  0/21 pages written  1/21 pages written  2/21 pages written  3/21 pages written  4/21 pages written  5/21 pages written  6/21 pages written  7/21 pages written  8/21 pages written  9/21 pages written 10/21 pages written 11/21 pages written 12/21 pages written 13/21 pages written 14/21 pages written 15/21 pages written 16/21 pages written 17/21 pages written 18/21 pages written 19/21 pages written 20/21 pages written 21/21 pages written2018-03-05T17:30:03 INFO src/stlink-common.c: Starting verification of write complete
+2018-03-05T17:30:04 INFO src/stlink-common.c: Flash written and verified! jolly good!
 

@@ -46,6 +46,8 @@ void f3d_nunchuk_init(void) {
   uint8_t buf = 0x55;
   uint8_t buf2 = 0x00;
 
+  uint8_t buf3 = 0x55;
+  uint8_t buf4 = 0x00;
   // Use for factory Wii Nunchuk controllers
   //f3d_i2c1_write(NUNCHUK_ADDRESS,0x40,&realb);
   // Use for 3 party nunchuks like we have in the lab
@@ -53,8 +55,9 @@ void f3d_nunchuk_init(void) {
   f3d_i2c1_write(NUNCHUK_ADDRESS,0xfb,&buf2);
 
 // second nunchuk code (uncomment me to use!)
-  f3d_i2c2_write(NUNCHUK_ADDRESS,0xf0,&buf3);
-  f3d_i2c2_write(NUNCHUK_ADDRESS,0xfb,&buf4);
+  //f3d_i2c2_write(NUNCHUK_ADDRESS,0x40,&realb);
+  //f3d_i2c2_write(NUNCHUK_ADDRESS,0xf0,&buf3);
+  //f3d_i2c2_write(NUNCHUK_ADDRESS,0xfb,&buf4);
 }
 
 void f3d_nunchuk_read(nunchuk_t *n) {
@@ -98,6 +101,7 @@ void f3d_nunchuk_read(nunchuk_t *n) {
   }
 }
 
+/*
 //read function for the second nunchuk
 //only difference is that f3d_i2c1_read_nunchuk is now i2c2
 void f3d_nunchuk_read2(nunchuk_t *n) {
@@ -140,5 +144,5 @@ void f3d_nunchuk_read2(nunchuk_t *n) {
     break;
   }
 }
-
+*/
 /* f3d_nunchuk.c ends here */
