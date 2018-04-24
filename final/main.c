@@ -303,6 +303,22 @@ int main(){
   printf("%u bytes written.\n", bw);
   rc = f_close(&Fil);
   if (rc) die(rc);
+
+  rc = f_open(&Fil, "HELLO.TXT", FA_READ);
+  if (rc) die(rc);
+
+  int i;
+  for (;;) {
+    rc = f_read(&Fil, strBuf, sizeof(strBuf), &br);
+    if (rc || !br) break;
+    for (i = 0; i < br; i++){
+      printf("%c",strBuf[i]);
+    }
+  }
+
+  if (rc) die(rc);
+  rc = f_close(&Fil);
+  if (rc) die(rc);
 /*
   //screenInit();
 
