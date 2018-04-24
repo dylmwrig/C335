@@ -269,17 +269,13 @@ int main(){
   delay(10);
   f3d_i2c2_init();
   delay(10);
-  printf("Before nunchuk, after i2c2");
   f3d_nunchuk_init();
   delay(10);
   
-  printf("Idk man");
   f3d_rtc_init();
   delay(10);
   f3d_lcd_init();
   delay(10);
-
-   printf("After init");
 
   //copied from lab 9
   //might not need all of these
@@ -296,6 +292,18 @@ int main(){
   f_mount(0, &Fatfs); //register volume work area (never fails)
   delay(10);
 
+  char strBuf[50];
+  sprintf(strBuf, "New high score %d\n", 52);
+  rc = f_open(&Fil, "SCORES.TXT", FA_WRITE | FA_READ | FA_CREATE_ALWAYS);
+  if (rc) die(rc);
+  
+  rc = f_write(&Fil, strBuf, 18, &bw);
+  //rc = f_printf(&Fil, "Your score is %d\n", 69);
+  if (rc) die(rc);
+  printf("%u bytes written.\n", bw);
+  rc = f_close(&Fil);
+  if (rc) die(rc);
+/*
   //screenInit();
 
   f3d_lcd_fillScreen(BLACK);
@@ -424,7 +432,8 @@ int main(){
     } //end if
   } //end while
   printf("Final Score: %d", score);
- 
+*/ 
+
 /*
   printf("\nCreate a new file (hello.txt).\n");
   rc = f_open(&Fil, "HELLO.TXT", FA_WRITE | FA_CREATE_ALWAYS);
