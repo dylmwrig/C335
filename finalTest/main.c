@@ -131,6 +131,13 @@ struct Object genOb(){
 } //end genOb
 
 int main(){
+
+
+/*
+  char strBuf[50];
+  sprintf(strBuf, "I know its plastic looooove %d", 18);
+  printf("%d", sizeof(strBuf));
+ 
   int screen[80][65] = {0}; //SCALE THE SCREEN BY 1/2 FOR TESTING
   int i, j;
 
@@ -185,4 +192,5 @@ int main(){
 
   fprintf(scores, "Your score: %d\n", SCORE);
   fclose(scores);
+*/
 } //end main

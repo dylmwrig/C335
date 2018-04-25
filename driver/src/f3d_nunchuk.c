@@ -56,8 +56,8 @@ void f3d_nunchuk_init(void) {
 
 // second nunchuk code (uncomment me to use!)
   //f3d_i2c2_write(NUNCHUK_ADDRESS,0x40,&realb);
-  //f3d_i2c2_write(NUNCHUK_ADDRESS,0xf0,&buf3);
-  //f3d_i2c2_write(NUNCHUK_ADDRESS,0xfb,&buf4);
+  f3d_i2c2_write(NUNCHUK_ADDRESS,0xf0,&buf3);
+  f3d_i2c2_write(NUNCHUK_ADDRESS,0xfb,&buf4);
 }
 
 void f3d_nunchuk_read(nunchuk_t *n) {

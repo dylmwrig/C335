@@ -87,7 +87,6 @@ int main(void) {
   }
   if (rc) die(rc);
 
-/*  
   printf("\nClose the file.\n");
   rc = f_close(&Fil);
   if (rc) die(rc);
@@ -119,7 +118,6 @@ int main(void) {
       printf("%8lu  %s\n", fno.fsize, fno.fname);
   }
   if (rc) die(rc);
-*/
   
   printf("\nTest completed.\n");
 
