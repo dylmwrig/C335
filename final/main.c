@@ -24,6 +24,7 @@
 #include <stdio.h> 
 #include <stdbool.h>
 #include <stdlib.h> //RNG
+#include <ctype.h> //isdigit()
 #define OBSTACLE_COUNT 2 //amount of obstacles to be generated at any time
 #define FAIL_MAX 2 //amount of failures before game over
 #define X_BOUND 160
@@ -292,34 +293,111 @@ int main(){
   f_mount(0, &Fatfs); //register volume work area (never fails)
   delay(10);
 
-  char strBuf[50];
-  sprintf(strBuf, "New high score %d\n", 52);
+  char strBuf[100];
+
+  rc = f_open(&Fil, "SCORES.TXT", FA_READ);
+  if (rc) die(rc);
+
+  int i;
+  int prevScores[3] = {-1, -1, -1};
+  int scoreInd = 0; 
+ 
+  //read in each digit found in the high scores file
+  //nobody will score more than two digits
+  //so I can just hard code this around 1 and 2 digit numbers
+  //store each score so we can compare the current player's score and store it if necessary
+  int resNum = -1;
+  for (;;) {
+    rc = f_read(&Fil, strBuf, sizeof(strBuf), &br);
+    if (rc || !br) break;
+    for (i = 0; i < br; i++){
+      //if there is a newline, clear the number var
+      //to allow for the one on the next line
+      if (strBuf[i] == 10){
+        resNum = -1;
+      } //end if
+
+      if (isdigit(strBuf[i])){
+        if (resNum == -1){
+          resNum = atoi(&strBuf[i]);
+          prevScores[scoreInd] = resNum;
+          scoreInd++;
+        } //end if
+      } //end if 
+    } //end for
+  } //end for
+
+  if (rc) die(rc);
+  rc = f_close(&Fil);
+  if (rc) die(rc);
+
+  if (scoreInd > 2){
+    scoreInd--;
+  } 
+
+  char bufDest[60];
+  char buf2[20];
+  //when you find the first high score that is less than the player's current score
+  //shift every element of the high score array to the right and fill in the player's score
+  int score = 18; //test val
+  int bufSize = 0;
+  int baseSize = 13; //"High score: %d\n" is 13 digits long without the digit modifier
+  for (i = 0; i < 3; i++){
+    if (score > prevScores[i]){
+      int j;
+      for (j = 2; j > i; j--){
+        prevScores[j] = prevScores[j - 1];
+      } //end for
+      prevScores[i] = score;
+      i = 4;
+    } //end if
+  } //end for
+
+  for (i = 0; i < 3; i++){
+  printf("i then value: %d %d\n", i, prevScores[i]);
+    if (prevScores[i] >= 0){
+      int digitSize;
+
+      if (prevScores[i] < 10){
+        digitSize = 2; //size modifier based on if the number is 2 or 1 digit long
+      } //end if
+
+      else {
+        digitSize = 1;
+      } //end else
+
+      bufSize += baseSize;
+      bufSize += digitSize;
+
+      if (i == 0){
+        sprintf(bufDest, "High score: %d\n", prevScores[i]);
+      }
+
+      else{
+        sprintf(buf2, "High score: %d\n", prevScores[i]);
+        strcat(bufDest, buf2);
+      } //end if
+    } //end if
+  } //end for
+
+  //digitSize += 2;
+  //bufSize += baseSize;
+  //bufSize += digitSize;
+  //digitSize = 1;
+  //sprintf(buf2, "High score: %d\n", 8);
+  //bufSize += baseSize;
+  //bufSize += digitSize;
   rc = f_open(&Fil, "SCORES.TXT", FA_WRITE | FA_READ | FA_CREATE_ALWAYS);
   if (rc) die(rc);
   
-  rc = f_write(&Fil, strBuf, 18, &bw);
+  rc = f_write(&Fil, bufDest, bufSize, &bw);
   //rc = f_printf(&Fil, "Your score is %d\n", 69);
   if (rc) die(rc);
   printf("%u bytes written.\n", bw);
   rc = f_close(&Fil);
   if (rc) die(rc);
 
-  rc = f_open(&Fil, "HELLO.TXT", FA_READ);
-  if (rc) die(rc);
-
-  int i;
-  for (;;) {
-    rc = f_read(&Fil, strBuf, sizeof(strBuf), &br);
-    if (rc || !br) break;
-    for (i = 0; i < br; i++){
-      printf("%c",strBuf[i]);
-    }
-  }
-
-  if (rc) die(rc);
-  rc = f_close(&Fil);
-  if (rc) die(rc);
-/*
+  /*
   //screenInit();
 
   f3d_lcd_fillScreen(BLACK);
