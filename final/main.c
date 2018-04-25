@@ -255,13 +255,14 @@ int main(){
   f3d_uart_init();
   delay(10);
 
+  /*
   f3d_i2c1_init();
   delay(10);
   f3d_i2c2_init();
   delay(10);
   f3d_nunchuk_init();
   delay(10);
- 
+  */
   f3d_rtc_init();
   delay(10);
   f3d_lcd_init();
@@ -334,6 +335,7 @@ int main(){
   printf("%d %d\n",rc,retval);
 */
 
+/*
   //screenInit();
   f3d_lcd_fillScreen(BLACK);
   f3d_lcd_fillScreen(WHITE);
@@ -442,6 +444,7 @@ int main(){
     } //end if
   } //end while
   printf("Final Score: %d", score);
+*/
 
 /*
   printf("\nCreate a new file (hello.txt).\n");
@@ -517,6 +520,9 @@ int main(){
 
   int prevScores[3] = {-1, -1, -1};
   int scoreInd = 0; 
+  int i, score = 15;
+ 
+  printf("After scores open\n");
  
   //read in each digit found in the high scores file
   //nobody will score more than two digits
@@ -550,6 +556,8 @@ int main(){
   if (scoreInd > 2){
     scoreInd--;
   } 
+
+  printf("Before logic\n");
 
   char bufDest[60];
   char buf2[20];
@@ -603,6 +611,8 @@ int main(){
   printf("%u bytes written.\n", bw);
   rc = f_close(&Fil);
   if (rc) die(rc);
+
+  printf("At the end\n");
 } //end main
 
 #ifdef USE_FULL_ASSERT
