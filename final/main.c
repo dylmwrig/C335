@@ -254,14 +254,14 @@ int main(){
 
   f3d_uart_init();
   delay(10);
-/*
+
   f3d_i2c1_init();
   delay(10);
   f3d_i2c2_init();
   delay(10);
   f3d_nunchuk_init();
   delay(10);
-*/ 
+ 
   f3d_rtc_init();
   delay(10);
   f3d_lcd_init();
@@ -334,103 +334,6 @@ int main(){
   printf("%d %d\n",rc,retval);
 */
 
-  char strBuf[100];
-
-  rc = f_open(&Fil, "SCORES.TXT", FA_READ | FA_OPEN_ALWAYS);
-  if (rc) die(rc);
-
-  int i;
-  int prevScores[3] = {-1, -1, -1};
-  int scoreInd = 0; 
- 
-  //read in each digit found in the high scores file
-  //nobody will score more than two digits
-  //so I can just hard code this around 1 and 2 digit numbers
-  //store each score so we can compare the current player's score and store it if necessary
-  int resNum = -1;
-  for (;;) {
-    rc = f_read(&Fil, strBuf, sizeof(strBuf), &br);
-    if (rc || !br) break;
-    for (i = 0; i < br; i++){
-      //if there is a newline, clear the number var
-      //to allow for the one on the next line
-      if (strBuf[i] == 10){
-        resNum = -1;
-      } //end if
-
-      if (isdigit(strBuf[i])){
-        if (resNum == -1){
-          resNum = atoi(&strBuf[i]);
-          prevScores[scoreInd] = resNum;
-          scoreInd++;
-        } //end if
-      } //end if 
-    } //end for
-  } //end for
-
-  if (rc) die(rc);
-  rc = f_close(&Fil);
-  if (rc) die(rc);
-
-  if (scoreInd > 2){
-    scoreInd--;
-  } 
-
-  char bufDest[60];
-  char buf2[20];
-  //when you find the first high score that is less than the player's current score
-  //shift every element of the high score array to the right and fill in the player's score
-  int score = 17; //test val
-  int bufSize = 0;
-  int baseSize = 13; //"High score: %d\n" is 13 digits long without the digit modifier
-  for (i = 0; i < 3; i++){
-    if (score > prevScores[i]){
-      int j;
-      for (j = 2; j > i; j--){
-        prevScores[j] = prevScores[j - 1];
-      } //end for
-      prevScores[i] = score;
-      i = 4;
-    } //end if
-  } //end for
-
-  for (i = 0; i < 3; i++){
-  printf("i then value: %d %d\n", i, prevScores[i]);
-    if (prevScores[i] >= 0){
-      int digitSize;
-
-      if (prevScores[i] < 10){
-        digitSize = 1; //size modifier based on if the number is 2 or 1 digit long
-      } //end if
-
-      else {
-        digitSize = 2;
-      } //end else
-
-      bufSize += baseSize;
-      bufSize += digitSize;
-
-      if (i == 0){
-        sprintf(bufDest, "High score: %d\n", prevScores[i]);
-      }
-
-      else{
-        sprintf(buf2, "High score: %d\n", prevScores[i]);
-        strcat(bufDest, buf2);
-      } //end if
-    } //end if
-  } //end for
-
-  rc = f_open(&Fil, "SCORES.TXT", FA_WRITE | FA_READ | FA_CREATE_ALWAYS);
-  if (rc) die(rc);
-  
-  rc = f_write(&Fil, bufDest, bufSize, &bw);
-  if (rc) die(rc);
-  printf("%u bytes written.\n", bw);
-  rc = f_close(&Fil);
-  if (rc) die(rc);
-
-/*
   //screenInit();
   f3d_lcd_fillScreen(BLACK);
   f3d_lcd_fillScreen(WHITE);
@@ -539,7 +442,6 @@ int main(){
     } //end if
   } //end while
   printf("Final Score: %d", score);
-*/
 
 /*
   printf("\nCreate a new file (hello.txt).\n");
@@ -607,7 +509,100 @@ int main(){
   rc = disk_ioctl(0,GET_SECTOR_COUNT,&retval);
   printf("%d %d\n",rc,retval);
 */
+
+  char strBuf[100];
+
+  rc = f_open(&Fil, "SCORES.TXT", FA_READ | FA_OPEN_ALWAYS);
+  if (rc) die(rc);
+
+  int prevScores[3] = {-1, -1, -1};
+  int scoreInd = 0; 
+ 
+  //read in each digit found in the high scores file
+  //nobody will score more than two digits
+  //so I can just hard code this around 1 and 2 digit numbers
+  //store each score so we can compare the current player's score and store it if necessary
+  int resNum = -1;
+  for (;;) {
+    rc = f_read(&Fil, strBuf, sizeof(strBuf), &br);
+    if (rc || !br) break;
+    for (i = 0; i < br; i++){
+      //if there is a newline, clear the number var
+      //to allow for the one on the next line
+      if (strBuf[i] == 10){
+        resNum = -1;
+      } //end if
+
+      if (isdigit(strBuf[i])){
+        if (resNum == -1){
+          resNum = atoi(&strBuf[i]);
+          prevScores[scoreInd] = resNum;
+          scoreInd++;
+        } //end if
+      } //end if 
+    } //end for
+  } //end for
+
+  if (rc) die(rc);
+  rc = f_close(&Fil);
+  if (rc) die(rc);
+
+  if (scoreInd > 2){
+    scoreInd--;
+  } 
+
+  char bufDest[60];
+  char buf2[20];
+  //when you find the first high score that is less than the player's current score
+  //shift every element of the high score array to the right and fill in the player's score
+  int bufSize = 0;
+  int baseSize = 13; //"High score: %d\n" is 13 digits long without the digit modifier
+  for (i = 0; i < 3; i++){
+    if (score > prevScores[i]){
+      int j;
+      for (j = 2; j > i; j--){
+        prevScores[j] = prevScores[j - 1];
+      } //end for
+      prevScores[i] = score;
+      i = 4;
+    } //end if
+  } //end for
+
+  for (i = 0; i < 3; i++){
+  printf("i then value: %d %d\n", i, prevScores[i]);
+    if (prevScores[i] >= 0){
+      int digitSize;
+
+      if (prevScores[i] < 10){
+        digitSize = 1; //size modifier based on if the number is 2 or 1 digit long
+      } //end if
+
+      else {
+        digitSize = 2;
+      } //end else
+
+      bufSize += baseSize;
+      bufSize += digitSize;
+
+      if (i == 0){
+        sprintf(bufDest, "High score: %d\n", prevScores[i]);
+      }
+
+      else{
+        sprintf(buf2, "High score: %d\n", prevScores[i]);
+        strcat(bufDest, buf2);
+      } //end if
+    } //end if
+  } //end for
+
+  rc = f_open(&Fil, "SCORES.TXT", FA_WRITE | FA_READ | FA_CREATE_ALWAYS);
+  if (rc) die(rc);
   
+  rc = f_write(&Fil, bufDest, bufSize, &bw);
+  if (rc) die(rc);
+  printf("%u bytes written.\n", bw);
+  rc = f_close(&Fil);
+  if (rc) die(rc);
 } //end main
 
 #ifdef USE_FULL_ASSERT
