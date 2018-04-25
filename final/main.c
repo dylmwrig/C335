@@ -108,7 +108,6 @@ bool hitDetect(struct Object player, struct Object obs){
 // copied over from the lab 7
 void updateGraphs(float oldPitch[80], float oldRoll[80], float newPitch, float newRoll){
   int i, pitchY, rollY;
-
   //unfortunately, this is the most efficient way I could come up with to clear the screen
   //it looks horrible but is fast so its ok I guess.
   for (i = 0; i < 79; i++){
@@ -121,28 +120,22 @@ void updateGraphs(float oldPitch[80], float oldRoll[80], float newPitch, float n
     else{
       pitchY = 40 - pitchY;
     } //end else
-
     f3d_lcd_drawPixel(i+20, pitchY, WHITE);
   } //end for
-
   for (i = 0; i < 79; i++){
     rollY = (int)(oldRoll[i] * 10.0);
     if (oldRoll[i] >= 0.0){
       rollY = 120 - rollY;
     } //end if
-
     else{
       rollY *= -1;
       rollY += 120;
     } //end else
-
     f3d_lcd_drawPixel(i+20, rollY, WHITE);
   } //end for
-
   swapVals(oldPitch, oldRoll);
   oldPitch[0] = newPitch;
   oldRoll[0] = newRoll;
-
   //to scale the values to the graph, the upper and lower bounds will be 2.0 and -2.0
   //there are 40 pixels vertically on each graph so each 0.1 corresponds to one pixel
   for (i = 0; i < 79; i++){
@@ -155,21 +148,17 @@ void updateGraphs(float oldPitch[80], float oldRoll[80], float newPitch, float n
     else{
       pitchY = 40 - pitchY;
     } //end else
-
     f3d_lcd_drawPixel(i+20, pitchY, BLACK);
   } //end for
-
   for (i = 0; i < 79; i++){
     rollY = (int)(oldRoll[i] * 10.0);
     if (oldRoll[i] >= 0.0){
       rollY = 120 - rollY;
     } //end if
-
     else{
       rollY *= -1;
       rollY += 120;
     } //end else
-
     f3d_lcd_drawPixel(i+20, rollY, BLACK);
   } //end for
 } //end updateGraphs
@@ -272,7 +261,7 @@ int main(){
   delay(10);
   f3d_nunchuk_init();
   delay(10);
-  
+ 
   f3d_rtc_init();
   delay(10);
   f3d_lcd_init();
@@ -295,7 +284,7 @@ int main(){
 
   char strBuf[100];
 
-  rc = f_open(&Fil, "SCORES.TXT", FA_READ);
+  rc = f_open(&Fil, "SCORES.TXT", FA_READ | FA_OPEN_ALWAYS);
   if (rc) die(rc);
 
   int i;
@@ -339,7 +328,7 @@ int main(){
   char buf2[20];
   //when you find the first high score that is less than the player's current score
   //shift every element of the high score array to the right and fill in the player's score
-  int score = 18; //test val
+  int score = 35; //test val
   int bufSize = 0;
   int baseSize = 13; //"High score: %d\n" is 13 digits long without the digit modifier
   for (i = 0; i < 3; i++){
@@ -359,11 +348,11 @@ int main(){
       int digitSize;
 
       if (prevScores[i] < 10){
-        digitSize = 2; //size modifier based on if the number is 2 or 1 digit long
+        digitSize = 1; //size modifier based on if the number is 2 or 1 digit long
       } //end if
 
       else {
-        digitSize = 1;
+        digitSize = 2;
       } //end else
 
       bufSize += baseSize;
@@ -380,18 +369,10 @@ int main(){
     } //end if
   } //end for
 
-  //digitSize += 2;
-  //bufSize += baseSize;
-  //bufSize += digitSize;
-  //digitSize = 1;
-  //sprintf(buf2, "High score: %d\n", 8);
-  //bufSize += baseSize;
-  //bufSize += digitSize;
   rc = f_open(&Fil, "SCORES.TXT", FA_WRITE | FA_READ | FA_CREATE_ALWAYS);
   if (rc) die(rc);
   
   rc = f_write(&Fil, bufDest, bufSize, &bw);
-  //rc = f_printf(&Fil, "Your score is %d\n", 69);
   if (rc) die(rc);
   printf("%u bytes written.\n", bw);
   rc = f_close(&Fil);
@@ -399,16 +380,12 @@ int main(){
 
   /*
   //screenInit();
-
   f3d_lcd_fillScreen(BLACK);
   f3d_lcd_fillScreen(WHITE);
-
   delay(10);
-
   struct Object obs[OBSTACLE_COUNT];
   nunchuk_t nun;
   nunchuk_t * nun_point = &nun;
-
   //random test values
   int i;
   for (i = 0; i < OBSTACLE_COUNT; i++){
@@ -417,13 +394,9 @@ int main(){
     obs[i].leftX = 0;
     obs[i].rightX = 0;
   } //end for
-
   obs[0] = genOb();  
-
   Object p = {.topY = 40, .lowY = 0, .leftX = 5, .rightX = 10};
-
   Object o = obs[0]; //used for testing
-
   drawObst(p); 
   drawObst(o);
   
@@ -434,9 +407,7 @@ int main(){
   int jumpFrame = 0;
  
   int score = 0, failures = 0;
-
   printf("Before while loop\n");
-
   //updateScreen(obs);
   while(1){
     f3d_nunchuk_read(nun_point);
@@ -448,38 +419,32 @@ int main(){
         jumpFrame = 0;
       } //end if
     } //end if
-
     if (jumping){
       if (playerUp){
         //start a downwards trajectory if the player as at the top of the arc
         if (jumpFrame == 30){
           playerUp = false;
         } //end if 
-
         else{
           movePlayer(&p, true);
           drawObst(p);
         } //end else
       } //end if
-
       //otherwise, the player is falling
       else{
         if (jumpFrame == 0){
           jumping = false;
         } //end if
-
         else{
           movePlayer(&p, false);
           drawObst(p);
         } //end else
       } //end else 
     } //end if
-
     if (o.rightX < 0){
       score++;
       o = genOb();      
     } //end if
-
     //delete the pixels outside of the current range of the box after movement
     for (i = o.lowY; i <= o.topY; i++){
       if (o.rightX <= X_BOUND){
@@ -494,7 +459,6 @@ int main(){
     drawObst(o);
     if (hitDetect(p, o)){
       failures++;
-
       //copied from drawObst
       //TODO
       //see if you can make color a parameter later on
@@ -508,18 +472,15 @@ int main(){
         f3d_lcd_drawPixel(y, o.leftX, WHITE);
         f3d_lcd_drawPixel(y, o.rightX, WHITE);
       } //end for
-
       o = genOb();
       if (failures == FAIL_MAX){
         break;
       } //end if
     } //end if
-
     if (jumping){
       if (playerUp){
         jumpFrame++;
       } //end if
-
       else{
         jumpFrame--;
       } //end else
