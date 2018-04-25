@@ -254,14 +254,14 @@ int main(){
 
   f3d_uart_init();
   delay(10);
-
+/*
   f3d_i2c1_init();
   delay(10);
   f3d_i2c2_init();
   delay(10);
   f3d_nunchuk_init();
   delay(10);
- 
+*/ 
   f3d_rtc_init();
   delay(10);
   f3d_lcd_init();
@@ -281,6 +281,58 @@ int main(){
 
   f_mount(0, &Fatfs); //register volume work area (never fails)
   delay(10);
+
+/*
+  printf("\nOpen an existing file (message.txt).\n");
+    rc = f_open(&Fil, "MESSAGE.TXT", FA_READ);
+  if (rc) die(rc);
+ 
+  printf("\nType the file content.\n");
+  for (;;) {
+    rc = f_read(&Fil, Buff, sizeof Buff, &br);	
+    if (rc || !br) break;			
+    for (i = 0; i < br; i++)		       
+      putchar(Buff[i]);
+  }
+  if (rc) die(rc);
+
+  printf("\nClose the file.\n");
+  rc = f_close(&Fil);
+  if (rc) die(rc);
+ 
+  printf("\nCreate a new file (hello.txt).\n");
+  rc = f_open(&Fil, "HELLO.TXT", FA_WRITE | FA_CREATE_ALWAYS);
+  if (rc) die(rc);
+  
+  printf("\nWrite a text data. (Hello world!)\n");
+  rc = f_write(&Fil, "Hello world!\r\n", 14, &bw);
+  if (rc) die(rc);
+  printf("%u bytes written.\n", bw);
+  
+  printf("\nClose the file.\n");
+  rc = f_close(&Fil);
+  if (rc) die(rc);
+  
+  printf("\nOpen root directory.\n");
+  rc = f_opendir(&dir, "");
+  if (rc) die(rc);
+  
+  printf("\nDirectory listing...\n");
+  for (;;) {
+    rc = f_readdir(&dir, &fno);		
+    if (rc || !fno.fname[0]) break;	
+    if (fno.fattrib & AM_DIR)
+      printf("   <dir>  %s\n", fno.fname);
+    else
+      printf("%8lu  %s\n", fno.fsize, fno.fname);
+  }
+  if (rc) die(rc);
+  
+  printf("\nTest completed.\n");
+
+  rc = disk_ioctl(0,GET_SECTOR_COUNT,&retval);
+  printf("%d %d\n",rc,retval);
+*/
 
   char strBuf[100];
 
@@ -328,7 +380,7 @@ int main(){
   char buf2[20];
   //when you find the first high score that is less than the player's current score
   //shift every element of the high score array to the right and fill in the player's score
-  int score = 35; //test val
+  int score = 17; //test val
   int bufSize = 0;
   int baseSize = 13; //"High score: %d\n" is 13 digits long without the digit modifier
   for (i = 0; i < 3; i++){
@@ -378,7 +430,7 @@ int main(){
   rc = f_close(&Fil);
   if (rc) die(rc);
 
-  /*
+/*
   //screenInit();
   f3d_lcd_fillScreen(BLACK);
   f3d_lcd_fillScreen(WHITE);
@@ -487,7 +539,7 @@ int main(){
     } //end if
   } //end while
   printf("Final Score: %d", score);
-*/ 
+*/
 
 /*
   printf("\nCreate a new file (hello.txt).\n");
@@ -533,15 +585,16 @@ int main(){
   printf("\nClose the file.\n");
   rc = f_close(&Fil);
   if (rc) die(rc);
-  */
+*/
+/*
   printf("\nOpen root directory.\n");
   rc = f_opendir(&dir, "");
   if (rc) die(rc);
   
   printf("\nDirectory listing...\n");
   for (;;) {
-    rc = f_readdir(&dir, &fno);		/* Read a directory item */
-    if (rc || !fno.fname[0]) break;	/* Error or end of dir */
+    rc = f_readdir(&dir, &fno);	9	
+    if (rc || !fno.fname[0]) break;	
     if (fno.fattrib & AM_DIR)
       printf("   <dir>  %s\n", fno.fname);
     else
@@ -553,7 +606,7 @@ int main(){
 
   rc = disk_ioctl(0,GET_SECTOR_COUNT,&retval);
   printf("%d %d\n",rc,retval);
-
+*/
   
 } //end main
 
