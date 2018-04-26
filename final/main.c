@@ -255,6 +255,7 @@ int main(){
   setvbuf(stdout, NULL, _IONBF, 0);
   setvbuf(stderr, NULL, _IONBF, 0);
 
+/*
   f3d_uart_init();
   delay(10);
   f3d_accel_init();
@@ -275,6 +276,7 @@ int main(){
     //printf("roll: %f\n", roll);
     printf("heading: %f\n", heading);
   } //end while
+*/
   /*
   f3d_i2c1_init();
   delay(10);
@@ -284,7 +286,6 @@ int main(){
   delay(10);
   */
 
-/*
   f3d_rtc_init();
   delay(10);
   f3d_lcd_init();
@@ -304,7 +305,6 @@ int main(){
 
   f_mount(0, &Fatfs); //register volume work area (never fails)
   delay(10);
-*/
 
 /*
   printf("\nOpen an existing file (message.txt).\n");
@@ -536,7 +536,6 @@ int main(){
   printf("%d %d\n",rc,retval);
 */
 
-/*
   char strBuf[100];
 
   rc = f_open(&Fil, "SCORES.TXT", FA_READ | FA_OPEN_ALWAYS);
@@ -637,7 +636,6 @@ int main(){
   if (rc) die(rc);
 
   printf("At the end\n");
-*/
 } //end main
 
 #ifdef USE_FULL_ASSERT
