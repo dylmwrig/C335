@@ -21,6 +21,7 @@
 #include <f3d_rtc.h>
 #include <f3d_accel.h>
 #include <f3d_mag.h>
+#include <f3d_delay.h>
 #include <ff.h>
 #include <diskio.h>
 #include <stdio.h> 
@@ -255,9 +256,9 @@ int main(){
   setvbuf(stdout, NULL, _IONBF, 0);
   setvbuf(stderr, NULL, _IONBF, 0);
 
-/*
   f3d_uart_init();
   delay(10);
+/*
   f3d_accel_init();
   delay(10);
   f3d_mag_init();
@@ -285,11 +286,12 @@ int main(){
   f3d_nunchuk_init();
   delay(10);
   */
-
+  f3d_delay_init();
+  delay(200);
   f3d_rtc_init();
-  delay(10);
+  delay(200);
   f3d_lcd_init();
-  delay(10);
+  delay(200);
 
   //copied from lab 9
   //might not need all of these
@@ -304,7 +306,7 @@ int main(){
   unsigned int retval;
 
   f_mount(0, &Fatfs); //register volume work area (never fails)
-  delay(10);
+  delay(200);
 
 /*
   printf("\nOpen an existing file (message.txt).\n");
