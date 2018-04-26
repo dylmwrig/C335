@@ -19,12 +19,15 @@
 #include <f3d_i2c2.h>
 #include <f3d_nunchuk.h>
 #include <f3d_rtc.h>
+#include <f3d_accel.h>
+#include <f3d_mag.h>
 #include <ff.h>
 #include <diskio.h>
 #include <stdio.h> 
 #include <stdbool.h>
 #include <stdlib.h> //RNG
 #include <ctype.h> //isdigit()
+#include <math.h> //atan2
 #define OBSTACLE_COUNT 2 //amount of obstacles to be generated at any time
 #define FAIL_MAX 2 //amount of failures before game over
 #define X_BOUND 160
@@ -254,7 +257,24 @@ int main(){
 
   f3d_uart_init();
   delay(10);
+  f3d_accel_init();
+  delay(10);
+  f3d_mag_init();
+  delay(10);
 
+  float acc[3], mag[3];
+
+  while(1){
+    f3d_accel_read(acc);
+    f3d_mag_read(mag);
+
+    float pitch = atan2(acc[0], pow(acc[1], 2) + pow(acc[2], 2));
+    float roll = atan2(acc[1], pow(acc[0], 2) + pow(acc[2], 2)); 
+    float heading = atan2(mag[1], mag[0]); 
+    //printf("pitch: %f\n", pitch);
+    //printf("roll: %f\n", roll);
+    printf("heading: %f\n", heading);
+  } //end while
   /*
   f3d_i2c1_init();
   delay(10);
@@ -263,6 +283,8 @@ int main(){
   f3d_nunchuk_init();
   delay(10);
   */
+
+/*
   f3d_rtc_init();
   delay(10);
   f3d_lcd_init();
@@ -282,6 +304,7 @@ int main(){
 
   f_mount(0, &Fatfs); //register volume work area (never fails)
   delay(10);
+*/
 
 /*
   printf("\nOpen an existing file (message.txt).\n");
@@ -513,6 +536,7 @@ int main(){
   printf("%d %d\n",rc,retval);
 */
 
+/*
   char strBuf[100];
 
   rc = f_open(&Fil, "SCORES.TXT", FA_READ | FA_OPEN_ALWAYS);
@@ -613,6 +637,7 @@ int main(){
   if (rc) die(rc);
 
   printf("At the end\n");
+*/
 } //end main
 
 #ifdef USE_FULL_ASSERT

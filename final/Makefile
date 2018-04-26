@@ -15,6 +15,8 @@ OBJS=  $(STARTUP) 	main.o \
 			f3d_rtc.o \
 			f3d_lcd_sd.o \
 			f3d_delay.o \
+			f3d_accel.o \
+			f3d_mag.o \
 			stm32f30x_i2c.o \
 			stm32f30x_rtc.o \
 			stm32f30x_rcc.o \
